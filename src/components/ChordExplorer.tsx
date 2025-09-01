@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { RotateCcw, Check, Star, Music } from 'lucide-react';
+import { RotateCcw, Check, Star, Music, Play, Pause } from 'lucide-react';
 import ScaleTheoryPanel from './ScaleTheoryPanel';
 import Metronome from './Metronome';
 import { getScaleInfo } from '../data/scaleTheory';
@@ -16,70 +16,70 @@ const ChordExplorer = () => {
     {
       name: "Secuencia 1 - Mayor/Dórico/Bebop",
       chords: ["Cmaj9", "Dm11", "G13", "Em7b5", "Am9", "F#m7b5", "Bm7b5", "E7alt", "Fmaj7#11", "C6/9"],
-      scales: ["Mayor", "Dórico", "Bebop", "Locrio", "Menor", "Menor Armónica", "Locrio", "Alterada", "Lidio", "Mayor"],
+      scales: ["Mayor", "Dórico", "Bebop", "Locrio", "Menor Natural", "Menor Armónica", "Locrio", "Alterada", "Lidio", "Mayor"],
       difficulty: "Intermedio",
       positions: ["VIII", "V", "III", "VII", "V", "II", "VII", "VII", "I", "III"]
     },
     {
       name: "Secuencia 2 - Frigio/Húngara/Japonesa",
       chords: ["Dm(maj7)", "Bb7#11", "F#dim7", "Cmaj7#5", "Ab7b5", "Gm6/9", "D7#9#11", "Em7add11", "A7sus4b9", "Dm9"],
-      scales: ["Menor Melódica", "Lidio", "Disminuida", "Tonos Enteros", "Frigio", "Dórico", "Húngara", "Japonesa", "Frigio", "Menor"],
+      scales: ["Menor Melódica", "Lidio b7", "Disminuida", "Tonos Enteros", "Frigio", "Dórico", "Húngara", "Japonesa", "Frigio", "Menor Natural"],
       difficulty: "Intermedio",
       positions: ["V", "VI", "II", "III", "IV", "III", "V", "VII", "V", "V"]
     },
     {
       name: "Secuencia 3 - Alterada/Bebop/Mixolidio",
       chords: ["G7#5#9", "Cmaj9#11", "Am7b5", "D7b9b13", "Gm(maj9)", "C13", "F7#11", "Bm7b5", "Em9", "A7alt"],
-      scales: ["Alterada", "Lidio", "Locrio", "Alterada", "Menor Melódica", "Mixolidio", "Bebop", "Menor Armónica", "Dórico", "Alterada"],
+      scales: ["Alterada", "Lidio", "Locrio", "Frigio Dom.", "Menor Melódica", "Mixolidio", "Bebop", "Menor Armónica", "Dórico", "Alterada"],
       difficulty: "Intermedio",
       positions: ["III", "VIII", "V", "X", "III", "VIII", "I", "VII", "VII", "V"]
     },
     {
       name: "Secuencia 4 - Drop 2 Avanzada",
       chords: ["Fmaj13#11", "Dm9/F", "G7#5b9", "Em7b5/G", "Am(maj9)", "F#m7b5/A", "B7alt/D#", "Em11b5", "A7b13#9", "Dm(maj7)"],
-      scales: ["Lidio", "Dórico", "Alterada", "Locrio", "Menor Melódica", "Menor Armónica", "Alterada", "Locrio", "Alterada", "Menor Melódica"],
+      scales: ["Lidio", "Dórico/3ra", "Alterada", "Locrio/3ra", "Menor Melódica", "Menor Arm./3ra", "Alterada/3ra", "Locrio", "Alterada", "Menor Melódica"],
       difficulty: "Avanzado",
       positions: ["I", "I", "III", "III", "V", "V", "VII", "VII", "V", "V"]
     },
     {
       name: "Secuencia 5 - Híbrido Picking Complex",
       chords: ["C7#11/G", "Am7b5add11", "D7alt/C", "Gm(maj7)/D", "C13b9", "F7#11b13", "Bm7b5/F", "E7#9b13", "Am6/9b5", "Dm(maj13)"],
-      scales: ["Bebop", "Locrio", "Alterada", "Menor Melódica", "Mixolidio", "Bebop", "Locrio", "Alterada", "Menor Armónica", "Menor Melódica"],
+      scales: ["Lidio b7/5ta", "Locrio Add11", "Alterada/b7", "Menor Mel./5ta", "Mixo b9", "Lidio b7b13", "Locrio/b5", "Alterada", "Menor b5", "Menor Melódica"],
       difficulty: "Avanzado",
       positions: ["III", "V", "III", "V", "VIII", "I", "VII", "VII", "V", "V"]
     },
     {
       name: "Secuencia 6 - Tapping & Extended Range",
       chords: ["Em11addb9", "A7#9b13sus4", "Dm(maj7)add11", "G13b5b9", "Cmaj9#11/E", "F#m7b5addb13", "B7alt/A", "Em7b5add#9", "Am(maj9)b6", "D7#11b13"],
-      scales: ["Frigio", "Alterada", "Menor Melódica", "Alterada", "Lidio", "Locrio", "Alterada", "Locrio", "Menor Armónica", "Alterada"],
+      scales: ["Frigio Add11", "Alterada Sus", "Menor Mel. Add11", "Alterada b5", "Lidio/3ra", "Locrio b13", "Alterada/b7", "Locrio #9", "Menor Harm. b6", "Alterada"],
       difficulty: "Experto",
       positions: ["XII", "V", "X", "III", "VIII", "II", "VII", "VII", "V", "X"]
     },
     {
       name: "Secuencia 7 - Wide Interval Voicings",
       chords: ["Fmaj7b5add9", "Dm7b5b9add11", "G7#5b9add#11", "Cmaj7add#9#11", "Am7addb13b9", "D7altadd#4", "Gm(maj7)add#5", "C7b5addb9#11", "Fmaj9b6add#4", "Bb13b5add#9"],
-      scales: ["Lidio", "Locrio", "Alterada", "Lidio", "Menor Armónica", "Alterada", "Menor Melódica", "Alterada", "Lidio", "Mixolidio"],
+      scales: ["Lidio b5", "Locrio b9 Add", "Alterada Add", "Lidio Add #9", "Menor Add b13", "Alterada #4", "Menor Mel. #5", "Alterada b5", "Lidio b6", "Mixo b5 Add"],
       difficulty: "Experto",
       positions: ["I", "V", "III", "VIII", "V", "X", "III", "VIII", "I", "VI"]
     },
     {
       name: "Secuencia 8 - Quartal/Quintal Stack",
       chords: ["Dm11/A", "G7sus4addb9#11", "Cm(maj7)sus4add#5", "F13sus2add#4", "Bm7b5sus4addb13", "E7altsus4add#9", "Am7sus4addb6b9", "D7susb2add#5#11", "Gm(maj9)sus4", "C13sus4b5add#9"],
-      scales: ["Dórico", "Bebop", "Menor Melódica", "Lidio", "Locrio", "Alterada", "Menor Armónica", "Alterada", "Menor Melódica", "Mixolidio"],
+      scales: ["Dórico Sus", "Mixolidio Sus Alt", "Menor Mel. Sus", "Lidio Sus2", "Locrio Sus b13", "Alterada Sus", "Menor Sus b6", "Alterada Sus b2", "Menor Mel. Sus", "Mixo Sus b5"],
       difficulty: "Experto",
       positions: ["V", "III", "III", "I", "VII", "VII", "V", "X", "III", "VIII"]
     },
     {
       name: "Secuencia 9 - Extended Technique Master",
       chords: ["Em7b5b9/D", "A7#5#9#11/C#", "Dm(maj13)/C", "G7b5b9#11/F", "Cmaj9#11/B", "F#m7b5#11/E", "B7altb13/A", "Em(maj7)#5/D#", "Am9b13/G", "D7#9#11b13/C"],
-      scales: ["Locrio", "Alterada", "Menor Melódica", "Alterada", "Lidio", "Locrio", "Alterada", "Menor Melódica", "Menor Armónica", "Alterada"],
+      scales: ["Locrio/b7", "Alterada/#5", "Menor Mel./b7", "Alterada/b7", "Lidio/7ma", "Locrio #11/b6", "Alterada b13/b7", "Menor Mel. #5/#7", "Menor b13/b7", "Alterada Total/b7"],
       difficulty: "Virtuoso",
       positions: ["VII", "IV", "VIII", "I", "VII", "II", "VII", "XI", "III", "X"]
     },
     {
       name: "Secuencia 10 - Ultimate Guitar Challenge",
       chords: ["Fm(maj7)#11/Eb", "Bb7b5#9add#11/Ab", "Ebmaj9b6/D", "Am7b5b13/G", "D7#5#9#11/C", "Gm(maj9)#11/F", "C7altb13add#4/Bb", "Fm7b5#9/Eb", "Bb13b5#11/Ab", "Ebmaj7#5b9/D"],
-      scales: ["Menor Armónica", "Alterada", "Lidio", "Locrio", "Alterada", "Menor Melódica", "Alterada", "Locrio", "Mixolidio", "Lidio"],
+      scales: ["Menor Harm. #11/b6", "Alterada b5/b6", "Lidio b6/b7", "Locrio b13/b7", "Alterada Total/b7", "Menor Mel. #11/b7", "Alt b13 #4/b7", "Locrio #9/b6", "Mixo b5 #11/b7", "Lidio #5/b7"],
       difficulty: "Virtuoso",
       positions: ["VI", "VI", "VI", "III", "VIII", "III", "VI", "VI", "VI", "VI"]
     }
@@ -177,25 +177,88 @@ const ChordExplorer = () => {
         <div className="text-xs text-blue-600 font-medium">Pos: {position}</div>
         <div className="text-xs text-gray-400">#{index + 1}</div>
       </div>
+      {/* Tooltip con información de la escala */}
+      <div className="absolute z-10 invisible group-hover:visible bg-gray-800 text-white p-3 rounded-lg shadow-lg -top-2 left-full ml-2 w-64 text-xs">
+        {(() => {
+          const scaleInfo = getScaleInfo(scale);
+          return scaleInfo ? (
+            <div>
+              <div className="font-semibold mb-1">{scaleInfo.name}</div>
+              <div className="mb-1">Intervalos: {scaleInfo.intervals}</div>
+              <div className="text-gray-300">{scaleInfo.characteristics}</div>
+            </div>
+          ) : (
+            <div>Información no disponible</div>
+          );
+        })()}
+      </div>
+    </div>
+  );
+
+  const MetronomeControl = () => (
+    <div className="bg-gray-100 p-4 rounded-lg">
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="font-semibold text-gray-700">Metrónomo</h3>
+        <div className="text-2xl font-bold text-blue-600">{tempo} BPM</div>
+      </div>
+      
+      <div className="flex items-center gap-3 mb-3">
+        <button
+          onClick={() => setIsPlaying(!isPlaying)}
+          className={`p-2 rounded-full ${
+            isPlaying ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'
+          } text-white transition-colors`}
+        >
+          {isPlaying ? <Pause size={20} /> : <Play size={20} />}
+        </button>
+        
+        <input
+          type="range"
+          min="40"
+          max="160"
+          value={tempo}
+          onChange={(e) => setTempo(parseInt(e.target.value))}
+          className="flex-1"
+        />
+      </div>
+      
+      <div className="flex gap-2">
+        <button
+          onClick={() => setTempo(60)}
+          className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded text-sm"
+        >
+          Lento (60)
+        </button>
+        <button
+          onClick={() => setTempo(100)}
+          className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded text-sm"
+        >
+          Medio (100)
+        </button>
+        <button
+          onClick={() => setTempo(140)}
+          className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded text-sm"
+        >
+          Rápido (140)
+        </button>
+      </div>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <Music className="text-indigo-600" size={32} />
-            <h1 className="text-4xl font-bold text-gray-800">Explorador de Escalas y Acordes</h1>
-          </div>
-          <p className="text-gray-600 max-w-2xl mx-auto">
-            Domina las escalas más importantes de la guitarra a través de secuencias progresivas de acordes complejos. 
-            Desde tensiones básicas hasta voicings virtuosos.
+          <h1 className="text-4xl font-bold text-gray-800 mb-2">
+            🎸 Explorador de Acordes Avanzados
+          </h1>
+          <p className="text-gray-600 text-lg">
+            Domina tensiones complejas y escalas exóticas con ejercicios progresivos
           </p>
         </div>
 
-        {/* Selector de Fase */}
+        {/* Navegación de Fases */}
         <div className="flex justify-center mb-8">
           <div className="flex bg-white rounded-xl shadow-lg p-2">
             {[1, 2, 3, 4].map(phase => (
@@ -204,21 +267,25 @@ const ChordExplorer = () => {
                 onClick={() => setCurrentPhase(phase)}
                 className={`px-6 py-3 rounded-lg font-semibold transition-all ${
                   currentPhase === phase
-                    ? 'bg-indigo-600 text-white shadow-md'
+                    ? 'bg-blue-600 text-white shadow-md'
                     : 'text-gray-600 hover:bg-gray-100'
                 }`}
               >
                 Fase {phase}
+                <div className="text-xs mt-1">
+                  {getPhaseProgress(phase)}%
+                </div>
               </button>
             ))}
           </div>
         </div>
 
+        {/* Contenido Principal */}
         <div className="grid lg:grid-cols-3 gap-8">
-          {/* Panel Principal */}
+          {/* Panel Principal de Ejercicios */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
-              <div className="flex items-center justify-between mb-6">
+            <div className="bg-white rounded-xl shadow-lg p-6">
+              <div className="flex justify-between items-start mb-4">
                 <h2 className="text-2xl font-bold text-gray-800">
                   {exercises[currentPhase].title}
                 </h2>
@@ -275,12 +342,7 @@ const ChordExplorer = () => {
             <ScaleTheoryPanel />
             
             {/* Metrónomo */}
-            <Metronome 
-              tempo={tempo}
-              setTempo={setTempo}
-              isPlaying={isPlaying}
-              setIsPlaying={setIsPlaying}
-            />
+            <MetronomeControl />
             
             {/* Secuencias de Acordes */}
             <div className="bg-white rounded-xl shadow-lg p-6">
