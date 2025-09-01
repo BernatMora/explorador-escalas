@@ -317,7 +317,7 @@ const ChordExplorer = () => {
         {/* Panel Lateral */}
         <div className="space-y-6">
           {/* Panel de Teoría Musical */}
-          <ScaleTheoryPanel selectedScale={chordSequences[currentSequence].scales[0]} />
+          <ScaleTheoryPanel />
           
           {/* Metrónomo */}
           <MetronomeControl />

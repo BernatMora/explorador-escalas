@@ -3,14 +3,14 @@ import { BookOpen, ChevronDown, ChevronUp, Music2, Target, Heart, Users } from '
 import { scaleTheory, getScaleInfo, ScaleInfo } from '../data/scaleTheory';
 
 interface ScaleTheoryPanelProps {
-  selectedScale?: string;
+  // No necesitamos props, el panel será independiente
 }
 
-const ScaleTheoryPanel: React.FC<ScaleTheoryPanelProps> = ({ selectedScale }) => {
+const ScaleTheoryPanel: React.FC<ScaleTheoryPanelProps> = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [selectedScaleInfo, setSelectedScaleInfo] = useState<string>('Mayor');
 
-  const currentScale = selectedScale ? getScaleInfo(selectedScale) : scaleTheory[selectedScaleInfo];
+  const currentScale = scaleTheory[selectedScaleInfo];
 
   const getDifficultyColor = (difficulty: string) => {
     const colors = {
@@ -44,23 +44,21 @@ const ScaleTheoryPanel: React.FC<ScaleTheoryPanelProps> = ({ selectedScale }) =>
 
       {isExpanded && (
         <div className="p-6">
-          {/* Selector de Escala */}
-          {!selectedScale && (
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Selecciona una escala para estudiar:
-              </label>
-              <select
-                value={selectedScaleInfo}
-                onChange={(e) => setSelectedScaleInfo(e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-              >
-                {Object.keys(scaleTheory).map((scale) => (
-                  <option key={scale} value={scale}>{scaleTheory[scale].name}</option>
-                ))}
-              </select>
-            </div>
-          )}
+          {/* Selector de Escala - Siempre visible */}
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Selecciona una escala para estudiar:
+            </label>
+            <select
+              value={selectedScaleInfo}
+              onChange={(e) => setSelectedScaleInfo(e.target.value)}
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            >
+              {Object.keys(scaleTheory).map((scale) => (
+                <option key={scale} value={scale}>{scaleTheory[scale].name}</option>
+              ))}
+            </select>
+          </div>
 
           {/* Información Principal */}
           <div className="space-y-6">
@@ -150,44 +148,117 @@ const ScaleTheoryPanel: React.FC<ScaleTheoryPanelProps> = ({ selectedScale }) =>
             {/* Comparación Rápida */}
             <div className="border-t pt-4">
               <h5 className="font-semibold text-gray-800 mb-3">🔄 Comparación con Escalas Relacionadas</h5>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
-                {selectedScaleInfo === 'Mayor' && (
-                  <>
-                    <div className="p-2 bg-gray-50 rounded">
-                      <div className="font-medium">vs. Menor Natural</div>
-                      <div className="text-gray-600">3ra, 6ta y 7ma bemol</div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                {(() => {
+                  const getComparisons = (scale: string) => {
+                    const comparisons: Record<string, Array<{name: string, difference: string}>> = {
+                      'Mayor': [
+                        { name: 'vs. Menor Natural', difference: '3ra, 6ta y 7ma bemol' },
+                        { name: 'vs. Lidio', difference: '4ta aumentada (#11)' },
+                        { name: 'vs. Mixolidio', difference: '7ma menor (b7)' },
+                        { name: 'vs. Dórico', difference: '3ra menor, 7ma menor' }
+                      ],
+                      'Menor': [
+                        { name: 'vs. Mayor', difference: '3ra, 6ta y 7ma bemol' },
+                        { name: 'vs. Dórico', difference: '6ta bemol' },
+                        { name: 'vs. Frigio', difference: '2da mayor' },
+                        { name: 'vs. Menor Armónica', difference: '7ma bemol' }
+                      ],
+                      'Dórico': [
+                        { name: 'vs. Menor Natural', difference: '6ta mayor' },
+                        { name: 'vs. Mayor', difference: '3ra menor' },
+                        { name: 'vs. Mixolidio', difference: '3ra menor' },
+                        { name: 'vs. Frigio', difference: '2da y 6ta mayor' }
+                      ],
+                      'Frigio': [
+                        { name: 'vs. Menor Natural', difference: '2da menor' },
+                        { name: 'vs. Dórico', difference: '2da y 6ta menor' },
+                        { name: 'vs. Locrio', difference: '5ta justa' },
+                        { name: 'vs. Árabe', difference: 'Menos cromática' }
+                      ],
+                      'Lidio': [
+                        { name: 'vs. Mayor', difference: '4ta aumentada (#11)' },
+                        { name: 'vs. Mixolidio', difference: '4ta aumentada, 7ma mayor' },
+                        { name: 'vs. Tonos Enteros', difference: 'Tiene semitonos' },
+                        { name: 'vs. Lidio b7', difference: '7ma mayor' }
+                      ],
+                      'Mixolidio': [
+                        { name: 'vs. Mayor', difference: '7ma menor (b7)' },
+                        { name: 'vs. Dórico', difference: '3ra mayor' },
+                        { name: 'vs. Lidio', difference: '4ta justa, 7ma menor' },
+                        { name: 'vs. Bebop', difference: 'Sin nota cromática' }
+                      ],
+                      'Locrio': [
+                        { name: 'vs. Frigio', difference: '5ta disminuida' },
+                        { name: 'vs. Menor Natural', difference: '2da y 5ta menor' },
+                        { name: 'vs. Alterada', difference: 'Menos alteraciones' },
+                        { name: 'vs. Disminuida', difference: 'No simétrica' }
+                      ],
+                      'Bebop': [
+                        { name: 'vs. Mixolidio', difference: 'Nota cromática añadida' },
+                        { name: 'vs. Mayor', difference: '7ma menor + cromática' },
+                        { name: 'vs. Blues', difference: 'Más notas, menos blue notes' },
+                        { name: 'vs. Alterada', difference: 'Menos alteraciones' }
+                      ],
+                      'Alterada': [
+                        { name: 'vs. Mixolidio', difference: 'Todas las tensiones alteradas' },
+                        { name: 'vs. Locrio', difference: 'Más alteraciones disponibles' },
+                        { name: 'vs. Disminuida', difference: 'No simétrica' },
+                        { name: 'vs. Bebop', difference: 'Máxima alteración' }
+                      ],
+                      'Tonos Enteros': [
+                        { name: 'vs. Lidio', difference: 'Solo tonos enteros' },
+                        { name: 'vs. Aumentada', difference: 'Diferente simetría' },
+                        { name: 'vs. Mayor', difference: 'Sin semitonos' },
+                        { name: 'vs. Alterada', difference: 'Simétrica, flotante' }
+                      ],
+                      'Disminuida': [
+                        { name: 'vs. Cromática', difference: 'Patrón específico T-S' },
+                        { name: 'vs. Alterada', difference: 'Simétrica' },
+                        { name: 'vs. Locrio', difference: 'Simétrica, más notas' },
+                        { name: 'vs. Bebop', difference: 'Patrón simétrico' }
+                      ],
+                      'Menor Armónica': [
+                        { name: 'vs. Menor Natural', difference: '7ma mayor (sensible)' },
+                        { name: 'vs. Menor Melódica', difference: '6ta menor' },
+                        { name: 'vs. Frigio Dom.', difference: 'Diferente centro tonal' },
+                        { name: 'vs. Árabe', difference: 'Menos cromática' }
+                      ],
+                      'Menor Melódica': [
+                        { name: 'vs. Menor Armónica', difference: '6ta mayor' },
+                        { name: 'vs. Mayor', difference: '3ra menor' },
+                        { name: 'vs. Dórico', difference: '7ma mayor' },
+                        { name: 'vs. Lidio', difference: '3ra menor, 4ta justa' }
+                      ],
+                      'Húngara': [
+                        { name: 'vs. Menor Armónica', difference: '4ta aumentada adicional' },
+                        { name: 'vs. Árabe', difference: 'Dos 2das aumentadas' },
+                        { name: 'vs. Frigio Dom.', difference: 'Más exótica' },
+                        { name: 'vs. Gitana', difference: 'Variante específica' }
+                      ],
+                      'Japonesa': [
+                        { name: 'vs. Pentatónica Menor', difference: 'Intervalos únicos' },
+                        { name: 'vs. Mayor Pentatónica', difference: 'Carácter menor' },
+                        { name: 'vs. Blues', difference: 'Sin blue notes' },
+                        { name: 'vs. Menor Natural', difference: 'Solo 5 notas' }
+                      ],
+                      'Árabe': [
+                        { name: 'vs. Frigio Dom.', difference: 'Más cromática' },
+                        { name: 'vs. Menor Armónica', difference: 'Más exótica' },
+                        { name: 'vs. Húngara', difference: 'Una 2da aumentada' },
+                        { name: 'vs. Bizantina', difference: 'Variante regional' }
+                      ]
+                    };
+                    return comparisons[scale] || [];
+                  };
+                  
+                  return getComparisons(selectedScaleInfo).map((comp, index) => (
+                    <div key={index} className="p-2 bg-gray-50 rounded">
+                      <div className="font-medium">{comp.name}</div>
+                      <div className="text-gray-600">{comp.difference}</div>
                     </div>
-                    <div className="p-2 bg-gray-50 rounded">
-                      <div className="font-medium">vs. Lidio</div>
-                      <div className="text-gray-600">4ta aumentada (#11)</div>
-                    </div>
-                    <div className="p-2 bg-gray-50 rounded">
-                      <div className="font-medium">vs. Mixolidio</div>
-                      <div className="text-gray-600">7ma menor (b7)</div>
-                    </div>
-                  </>
-                )}
-                {selectedScaleInfo === 'Alterada' && (
-                  <>
-                    <div className="p-2 bg-gray-50 rounded">
-                      <div className="font-medium">vs. Mixolidio</div>
-                      <div className="text-gray-600">Todas las tensiones alteradas</div>
-                    </div>
-                    <div className="p-2 bg-gray-50 rounded">
-                      <div className="font-medium">vs. Frigio Dom.</div>
-                      <div className="text-gray-600">5ta disminuida adicional</div>
-                    </div>
-                    <div className="p-2 bg-gray-50 rounded">
-                      <div className="font-medium">vs. Locrio</div>
-                      <div className="text-gray-600">Más alteraciones disponibles</div>
-                    </div>
-                  </>
-                )}
-                {(selectedScaleInfo !== 'Mayor' && selectedScaleInfo !== 'Alterada') && (
-                  <div className="p-2 bg-gray-50 rounded col-span-3 text-center">
-                    <div className="text-gray-600">Selecciona Mayor o Alterada para ver comparaciones</div>
-                  </div>
-                )}
+                  ));
+                })()}
               </div>
             </div>
           </div>
