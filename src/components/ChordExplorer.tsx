@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Play, Pause, RotateCcw, Check, Star, Music } from 'lucide-react';
+import { RotateCcw, Check, Star, Music } from 'lucide-react';
 import ScaleTheoryPanel from './ScaleTheoryPanel';
+import Metronome from './Metronome';
 import { getScaleInfo } from '../data/scaleTheory';
 
 const ChordExplorer = () => {
@@ -176,6 +177,21 @@ const ChordExplorer = () => {
         <div className="text-xs text-blue-600 font-medium">Pos: {position}</div>
         <div className="text-xs text-gray-400">#{index + 1}</div>
       </div>
+      {/* Tooltip con información de la escala */}
+      <div className="absolute z-10 invisible group-hover:visible bg-gray-800 text-white p-3 rounded-lg shadow-lg -top-2 left-full ml-2 w-64 text-xs">
+        {(() => {
+          const scaleInfo = getScaleInfo(scale);
+          return scaleInfo ? (
+            <div>
+              <div className="font-semibold mb-1">{scaleInfo.name}</div>
+              <div className="mb-1">Intervalos: {scaleInfo.intervals}</div>
+              <div className="text-gray-300">{scaleInfo.characteristics}</div>
+            </div>
+          ) : (
+            <div>Información no disponible</div>
+          );
+        })()}
+      </div>
     </div>
   );
 
@@ -215,56 +231,6 @@ const ChordExplorer = () => {
         </button>
         <button
           onClick={() => setTempo(100)}
-          className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded text-sm"
-        >
-          Medio (100)
-        </button>
-        <button
-          onClick={() => setTempo(140)}
-          className="px-3 py-1 bg-gray-200 hover:bg-gray-300 rounded text-sm"
-        >
-          Rápido (140)
-        </button>
-      </div>
-    </div>
-  );
-
-  return (
-    <div className="max-w-6xl mx-auto p-6 bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen">
-      <div className="text-center mb-8">
-        <h1 className="text-4xl font-bold text-gray-800 mb-2 flex items-center justify-center gap-3">
-          <Music className="text-blue-600" />
-          Explorador de Acordes y Escalas
-        </h1>
-        <p className="text-gray-600">Sistema progresivo para dominar acordes complejos y posiciones</p>
-      </div>
-
-      {/* Navegación de Fases */}
-      <div className="flex flex-wrap gap-2 mb-8 justify-center">
-        {[1, 2, 3, 4].map(phase => (
-          <button
-            key={phase}
-            onClick={() => setCurrentPhase(phase)}
-            className={`px-4 py-2 rounded-lg font-medium transition-all ${
-              currentPhase === phase
-                ? 'bg-blue-600 text-white shadow-lg'
-                : 'bg-white text-gray-600 hover:bg-gray-100'
-            }`}
-          >
-            Fase {phase}
-            <div className="text-xs mt-1">
-              {getPhaseProgress(phase)}% completado
-            </div>
-          </button>
-        ))}
-      </div>
-
-      <div className="grid lg:grid-cols-3 gap-8">
-        {/* Panel Principal - Ejercicios */}
-        <div className="lg:col-span-2">
-          <div className="bg-white rounded-xl shadow-lg p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-gray-800">
                 {exercises[currentPhase].title}
               </h2>
               <div className="text-right">
