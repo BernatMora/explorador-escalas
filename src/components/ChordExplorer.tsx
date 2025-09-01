@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Play, Pause, RotateCcw, Check, Star, Music } from 'lucide-react';
+import ScaleTheoryPanel from './ScaleTheoryPanel';
+import { getScaleInfo } from '../data/scaleTheory';
 
 const ChordExplorer = () => {
   const [currentPhase, setCurrentPhase] = useState(1);
@@ -314,6 +316,9 @@ const ChordExplorer = () => {
 
         {/* Panel Lateral */}
         <div className="space-y-6">
+          {/* Panel de Teoría Musical */}
+          <ScaleTheoryPanel selectedScale={chordSequences[currentSequence].scales[0]} />
+          
           {/* Metrónomo */}
           <MetronomeControl />
           
@@ -357,15 +362,31 @@ const ChordExplorer = () => {
             
             <div className="grid grid-cols-2 gap-1 mb-4 max-h-96 overflow-y-auto">
               {chordSequences[currentSequence].chords.map((chord, index) => (
-                <ChordCard
-                  key={index}
-                  chord={chord}
-                  scale={chordSequences[currentSequence].scales[index]}
-                  position={chordSequences[currentSequence].positions[index]}
-                  index={index}
-                  isActive={false}
-                  difficulty={chordSequences[currentSequence].difficulty}
-                />
+                <div key={index} className="relative group">
+                  <ChordCard
+                    chord={chord}
+                    scale={chordSequences[currentSequence].scales[index]}
+                    position={chordSequences[currentSequence].positions[index]}
+                    index={index}
+                    isActive={false}
+                    difficulty={chordSequences[currentSequence].difficulty}
+                  />
+                  {/* Tooltip con información de la escala */}
+                  <div className="absolute z-10 invisible group-hover:visible bg-gray-800 text-white p-3 rounded-lg shadow-lg -top-2 left-full ml-2 w-64 text-xs">
+                    {(() => {
+                      const scaleInfo = getScaleInfo(chordSequences[currentSequence].scales[index]);
+                      return scaleInfo ? (
+                        <div>
+                          <div className="font-semibold mb-1">{scaleInfo.name}</div>
+                          <div className="mb-1">Intervalos: {scaleInfo.intervals}</div>
+                          <div className="text-gray-300">{scaleInfo.characteristics}</div>
+                        </div>
+                      ) : (
+                        <div>Información no disponible</div>
+                      );
+                    })()}
+                  </div>
+                </div>
               ))}
             </div>
             
@@ -532,6 +553,32 @@ const ChordExplorer = () => {
                 • Wide voicings: separa las notas por el mástil
               </div>
             </div>
+          </div>
+          
+          {/* Teoría de la Escala Actual */}
+          <div className="border-t pt-4 mt-4">
+            <h4 className="font-semibold text-gray-800 mb-3">📚 Escala en Foco</h4>
+            {(() => {
+              const currentScaleInfo = getScaleInfo(chordSequences[currentSequence].scales[0]);
+              return currentScaleInfo ? (
+                <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg">
+                  <div className="flex items-center justify-between mb-2">
+                    <h5 className="font-semibold text-indigo-800">{currentScaleInfo.name}</h5>
+                    <span className={`px-2 py-1 rounded text-xs ${getDifficultyColor(currentScaleInfo.difficulty)}`}>
+                      {currentScaleInfo.difficulty}
+                    </span>
+                  </div>
+                  <div className="text-sm text-indigo-700 mb-2">{currentScaleInfo.characteristics}</div>
+                  <div className="text-xs text-indigo-600">
+                    <strong>Emociones:</strong> {currentScaleInfo.emotions}
+                  </div>
+                </div>
+              ) : (
+                <div className="p-4 bg-gray-50 rounded-lg text-sm text-gray-600">
+                  Información teórica no disponible para esta escala
+                </div>
+              );
+            })()}
           </div>
         </div>
       </div>
