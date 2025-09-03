@@ -476,80 +476,17 @@ const ChordExplorer = () => {
 
         {/* Navegación de Fases */}
         <div className="flex justify-center mb-8">
-          <div className="flex flex-wrap bg-white rounded-xl shadow-lg p-2 gap-1">
-            {[1, 2, 3, 4, 5, 6, 7].map(phase => {
+          <div className="flex bg-white rounded-xl shadow-lg p-2">
+            {[1, 2, 3, 4].map(phase => {
               const unlocked = isPhaseUnlocked(phase);
-              const getPhaseColor = (phase) => {
-                if (phase <= 4) return currentPhase === phase ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100';
-                if (phase === 5) return currentPhase === phase ? 'bg-red-600 text-white' : 'text-red-600 hover:bg-red-50';
-                if (phase === 6) return currentPhase === phase ? 'bg-purple-600 text-white' : 'text-purple-600 hover:bg-purple-50';
-                if (phase === 7) return currentPhase === phase ? 'bg-gradient-to-r from-yellow-500 to-orange-500 text-white' : 'text-orange-600 hover:bg-orange-50';
-                return 'text-gray-600';
-              };
-              
-              const getPhaseEmoji = (phase) => {
-                const emojis = { 1: '📗', 2: '📘', 3: '📕', 4: '📜', 5: '🔥', 6: '💀', 7: '🏆' };
-                return emojis[phase] || '';
-              };
-              
               return (
                 <button
                   key={phase}
                   onClick={() => unlocked && setCurrentPhase(phase)}
                   disabled={!unlocked}
-                  className={`px-4 py-3 rounded-lg font-semibold transition-all flex flex-col items-center gap-1 min-w-[80px] ${
-                    unlocked
-                      ? getPhaseColor(phase) + (currentPhase === phase ? ' shadow-md' : '')
-                      : 'text-gray-400 bg-gray-50 cursor-not-allowed'
-                  } ${phase > 4 && unlocked ? 'animate-pulse' : ''}`}
-                  title={phase > 4 ? 'Fase Extrema - Solo para valientes' : ''}
-                >
-                  <div className="flex items-center gap-1">
-                    {unlocked ? <Unlock size={14} /> : <Lock size={14} />}
-                    <span className="text-lg">{getPhaseEmoji(phase)}</span>
-                  </div>
-                  <div className="text-sm">Fase {phase}</div>
-                  <div className="text-xs opacity-75">
-                    {getPhaseProgress(phase)}%
-                  </div>
-                  {phase > 4 && unlocked && (
-                    <div className="text-xs font-bold">
-                      {phase === 5 && 'MENTAL'}
-                      {phase === 6 && 'IMPOSIBLE'}
-                      {phase === 7 && 'TRANSCENDENTAL'}
-                    </div>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Advertencia para Fases Extremas */}
-        {currentPhase > 4 && (
-          <div className="mb-8 bg-gradient-to-r from-red-500 to-purple-600 text-white p-6 rounded-xl shadow-lg border-2 border-red-300">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="text-3xl">⚠️</div>
-              <div>
-                <h3 className="text-xl font-bold">
-                  {currentPhase === 5 && '🧠 ZONA DE RETOS MENTALES EXTREMOS'}
-                  {currentPhase === 6 && '💀 ZONA DE TÉCNICA IMPOSIBLE'}
-                  {currentPhase === 7 && '🏆 ZONA DE TRANSCENDENCIA MUSICAL'}
-                </h3>
-                <p className="text-sm opacity-90">
-                  {currentPhase === 5 && 'Estos ejercicios desafían tu comprensión armónica y capacidad de procesamiento mental.'}
-                  {currentPhase === 6 && 'Combinaciones de técnicas que parecen físicamente imposibles. Procede bajo tu propio riesgo.'}
-                  {currentPhase === 7 && 'El nivel final. Maestría absoluta que trasciende la técnica pura.'}
-                </p>
-              </div>
-            </div>
-            <div className="text-xs opacity-75">
-              {currentPhase === 5 && '⚡ Requiere: Memoria fotográfica, procesamiento mental extremo, resistencia psicológica'}
-              {currentPhase === 6 && '🔥 Requiere: Coordinación sobrehumana, técnicas simultáneas, preparación física extrema'}
-              {currentPhase === 7 && '✨ Requiere: Fusión total mente-cuerpo-música, creatividad transcendental, estado meditativo'}
-            </div>
-          </div>
-        )}
+                  className={`px-6 py-3 rounded-lg font-semibold transition-all flex items-center gap-2 ${
+                    currentPhase === phase
+                      ? 'bg-blue-600 text-white shadow-md'
                       : unlocked
                         ? 'text-gray-600 hover:bg-gray-100'
                         : 'text-gray-400 bg-gray-50 cursor-not-allowed'
@@ -630,7 +567,7 @@ const ChordExplorer = () => {
                   return (
                     <div 
                       key={index}
-                      className={\`p-4 rounded-lg border-2 transition-all ${
+                      className={`p-4 rounded-lg border-2 transition-all ${
                         isActive
                           ? 'border-green-500 bg-green-50 shadow-lg'
                           : isCompleted
@@ -642,7 +579,7 @@ const ChordExplorer = () => {
                         <div className="flex items-center gap-3">
                           <button
                             onClick={() => toggleExercise(currentPhase, index)}
-                            className={\`p-2 rounded-full ${
+                            className={`p-2 rounded-full ${
                               isCompleted
                                 ? 'bg-green-500 text-white'
                                 : 'bg-gray-200 text-gray-500'
@@ -661,7 +598,7 @@ const ChordExplorer = () => {
                           <button
                             onClick={() => startExercise(currentPhase, index)}
                             disabled={isActive}
-                            className={\`px-4 py-2 rounded-lg font-medium transition-colors ${
+                            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                               isActive
                                 ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                                 : 'bg-blue-600 hover:bg-blue-700 text-white'
@@ -705,7 +642,7 @@ const ChordExplorer = () => {
                       </option>
                     ))}
                   </select>
-                  <div className={\`px-3 py-1 rounded-full text-xs font-medium ${getDifficultyColor(chordSequences[currentSequence].difficulty)}`}>
+                  <div className={`px-3 py-1 rounded-full text-xs font-medium ${getDifficultyColor(chordSequences[currentSequence].difficulty)}`}>
                     {chordSequences[currentSequence].difficulty}
                   </div>
                 </div>
@@ -834,12 +771,12 @@ const ChordExplorer = () => {
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2">
                         <div 
-                          className={\`h-2 rounded-full transition-all duration-300 ${
+                          className={`h-2 rounded-full transition-all duration-300 ${
                             unlocked 
                               ? 'bg-gradient-to-r from-blue-500 to-purple-500'
                               : 'bg-gray-400'
                           }`}
-                          style={{width: \`${progress}%`}}
+                          style={{width: `${progress}%`}}
                         ></div>
                       </div>
                     </div>
@@ -895,6 +832,30 @@ const ChordExplorer = () => {
                 <div>• Domina técnicas virtuosas (110-200 BPM)</div>
               </>
             )}
+            {currentPhase === 5 && (
+              <>
+                <div className="text-red-600 font-bold">🧠 • Memoriza las modulaciones antes de tocar</div>
+                <div className="text-red-600 font-bold">🎯 • Identifica el centro tonal en tiempo real</div>
+                <div className="text-red-600 font-bold">⚡ • Cambia de escala mental cada 2 acordes</div>
+                <div className="text-red-600 font-bold">🔄 • Practica modulaciones ciegas (sin mirar)</div>
+              </>
+            )}
+            {currentPhase === 6 && (
+              <>
+                <div className="text-purple-600 font-bold">🤹 • Combina 3+ técnicas simultáneamente</div>
+                <div className="text-purple-600 font-bold">🎸 • Tapping + hybrid picking + bends</div>
+                <div className="text-purple-600 font-bold">👁️ • Ejecución completamente ciega</div>
+                <div className="text-purple-600 font-bold">🧘 • Mantén la calma mental bajo presión extrema</div>
+              </>
+            )}
+            {currentPhase === 7 && (
+              <>
+                <div className="text-yellow-600 font-bold">🏆 • Trasciende la técnica - busca la expresión pura</div>
+                <div className="text-yellow-600 font-bold">🧠 • Enseña mientras tocas - dominio total</div>
+                <div className="text-yellow-600 font-bold">🎵 • Improvisa sobre estructuras imposibles</div>
+                <div className="text-yellow-600 font-bold">🌟 • Alcanza el estado de flow absoluto</div>
+              </>
+            )}
           </div>
 
           {/* Secuencias de la Fase Actual */}
@@ -906,22 +867,34 @@ const ChordExplorer = () => {
                 return (
                   <div 
                     key={seqIndex}
-                    className={\`p-3 border rounded-lg cursor-pointer transition-all ${
+                    className={`p-3 border rounded-lg cursor-pointer transition-all ${
                       currentSequence === seqIndex
-                        ? 'border-blue-500 bg-blue-50'
+                        ? seq.phase >= 5
+                          ? 'border-red-500 bg-red-50'
+                          : 'border-blue-500 bg-blue-50'
                         : 'border-gray-200 hover:border-gray-300'
                     }`}
                     onClick={() => setCurrentSequence(seqIndex)}
                   >
                     <div className="flex items-center justify-between mb-1">
-                      <span className="font-medium text-gray-800">{seq.name}</span>
-                      <span className={\`px-2 py-1 rounded text-xs ${getDifficultyColor(seq.difficulty)}`}>
+                      <span className="font-medium text-gray-800">
+                        {seq.name}
+                        {seq.phase >= 5 && <span className="ml-1 text-red-500">🔥</span>}
+                        {seq.phase >= 6 && <span className="ml-1">💀</span>}
+                        {seq.phase === 7 && <span className="ml-1">🏆</span>}
+                      </span>
+                      <span className={`px-2 py-1 rounded text-xs ${getDifficultyColor(seq.difficulty)}`}>
                         {seq.difficulty}
                       </span>
                     </div>
                     <div className="text-xs text-gray-600">
                       Tempo: {seq.tempoRange[0]}-{seq.tempoRange[1]} BPM
                     </div>
+                    {seq.specialTechnique && (
+                      <div className="text-xs text-purple-600 mt-1 font-medium">
+                        🎸 {seq.specialTechnique}
+                      </div>
+                    )}
                   </div>
                 );
               })}
@@ -931,7 +904,7 @@ const ChordExplorer = () => {
           {/* Guía de Dificultad */}
           <div className="border-t pt-4 mt-4">
             <h4 className="font-semibold text-gray-800 mb-3">🎯 Sistema de Progresión</h4>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 text-xs">
               <div className="p-3 bg-green-50 border border-green-200 rounded">
                 <div className="font-semibold text-green-700 mb-1">📗 Fase 1</div>
                 <div className="text-green-600">Construcción gradual. Tensiones básicas (9, 11, 13). Tempo 60-90 BPM.</div>
@@ -947,6 +920,18 @@ const ChordExplorer = () => {
               <div className="p-3 bg-purple-50 border border-purple-200 rounded">
                 <div className="font-semibold text-purple-700 mb-1">📜 Fase 4</div>
                 <div className="text-purple-600">Aplicación musical. Técnicas virtuosas, tapping. Tempo 110-200 BPM.</div>
+              </div>
+              <div className="p-3 bg-red-100 border-2 border-red-300 rounded">
+                <div className="font-semibold text-red-800 mb-1">🔥 Fase 5</div>
+                <div className="text-red-700">RETOS MENTALES. Modulaciones extremas. Tempo 150-240 BPM.</div>
+              </div>
+              <div className="p-3 bg-purple-100 border-2 border-purple-300 rounded">
+                <div className="font-semibold text-purple-800 mb-1">💀 Fase 6</div>
+                <div className="text-purple-700">TÉCNICA IMPOSIBLE. Combinaciones extremas. Tempo 180-280 BPM.</div>
+              </div>
+              <div className="p-3 bg-gradient-to-r from-yellow-100 to-gold-100 border-2 border-yellow-400 rounded">
+                <div className="font-semibold text-yellow-800 mb-1">🏆 Fase 7</div>
+                <div className="text-yellow-700">TRANSCENDENCIA. Maestría absoluta. Tempo 220-300 BPM.</div>
               </div>
             </div>
           </div>
