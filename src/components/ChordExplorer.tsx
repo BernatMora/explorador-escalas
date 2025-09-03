@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Music, Play, Pause, Clock, Target, BookOpen, Unlock, Lock, RotateCcw, Brain, Zap, Eye, GraduationCap } from 'lucide-react';
 import Metronome from './Metronome';
 import ScaleTheoryPanel from './ScaleTheoryPanel';
+import ChordAnatomy from './ChordAnatomy';
+import MethodologyPanel from './MethodologyPanel';
 import { getScaleInfo } from '../data/scaleTheory';
 
 // Interfaces
@@ -940,7 +942,7 @@ const ChordExplorer: React.FC = () => {
               {/* Grid de Acordes - Mejorado para acordes largos */}
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 mb-6 max-h-80 overflow-y-auto">
                 {chordSequences[currentSequence].chords.map((chord, index) => (
-                  <div key={index} className="relative group">
+                  <div key={index} className="relative group space-y-2">
                     <ChordCard
                       chord={chord}
                       scale={chordSequences[currentSequence].scales[index]}
@@ -948,6 +950,12 @@ const ChordExplorer: React.FC = () => {
                       index={index}
                       isActive={false}
                       difficulty={chordSequences[currentSequence].difficulty}
+                    />
+                    {/* Anatomía del Acorde */}
+                    <ChordAnatomy 
+                      chordName={chord}
+                      scaleName={chordSequences[currentSequence].scales[index]}
+                      position={chordSequences[currentSequence].positions[index]}
                     />
                     {/* Tooltip mejorado con información de la escala */}
                     <div className="absolute z-10 invisible group-hover:visible bg-gray-800 text-white p-3 rounded-lg shadow-lg -top-2 left-full ml-2 w-64 text-xs">
@@ -1048,6 +1056,9 @@ const ChordExplorer: React.FC = () => {
 
           {/* Panel Lateral */}
           <div className="space-y-6">
+            {/* Panel de Metodología */}
+            <MethodologyPanel currentPhase={currentPhase} />
+            
             {/* Panel de Teoría Musical */}
             <ScaleTheoryPanel />
             
