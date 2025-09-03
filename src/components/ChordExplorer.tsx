@@ -1,620 +1,736 @@
 import React, { useState, useEffect } from 'react';
-import { RotateCcw, Check, Star, Music, Play, Pause, Lock, Unlock } from 'lucide-react';
-import ScaleTheoryPanel from './ScaleTheoryPanel';
+import { Music, Play, Pause, Clock, Target, BookOpen, Unlock, Lock, RotateCcw, Brain, Zap, Eye, GraduationCap } from 'lucide-react';
 import Metronome from './Metronome';
+import ScaleTheoryPanel from './ScaleTheoryPanel';
 import { getScaleInfo } from '../data/scaleTheory';
 
-const ChordExplorer = () => {
-  const [currentPhase, setCurrentPhase] = useState(1);
-  const [completedExercises, setCompletedExercises] = useState([]);
-  const [currentSequence, setCurrentSequence] = useState(0);
-  const [tempo, setTempo] = useState(60);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [activeExercise, setActiveExercise] = useState(null);
-  const [exerciseTimer, setExerciseTimer] = useState(0);
-  const [isExerciseActive, setIsExerciseActive] = useState(false);
+// Interfaces
+interface ChordSequence {
+  name: string;
+  chords: string[];
+  scales: string[];
+  positions: number[];
+  difficulty: 'Intermedio' | 'Avanzado' | 'Experto' | 'Virtuoso' | 'Demencial' | 'Imposible' | 'Transcendental';
+  tempoRange: [number, number];
+  phase: number;
+}
 
-  // Definir qué secuencias corresponden a cada fase
-  const phaseSequences = {
-    1: [0, 1], // Secuencias 1-2: Básicas e intermedias
-    2: [2, 3], // Secuencias 3-4: Exploración sonora
-    3: [4, 5], // Secuencias 5-6: Fluidez y velocidad
-    4: [6, 7, 8, 9], // Secuencias 7-10: Aplicación musical avanzada
-    5: [10, 11], // Secuencias 11-12: Retos mentales extremos
-    6: [12, 13], // Secuencias 13-14: Técnica imposible
-    7: [14], // Secuencia 15: Transcendencia total
-    8: [15, 16, 17] // Secuencias 16-18: Retos cerebrales extremos
+interface Exercise {
+  id: string;
+  name: string;
+  description: string;
+  duration: number;
+  difficulty: 'Intermedio' | 'Avanzado' | 'Experto' | 'Virtuoso' | 'Demencial' | 'Imposible' | 'Transcendental';
+  techniques: string[];
+  mentalChallenges?: string[];
+  sequenceIds: number[];
+  instructions: string[];
+  warnings?: string[];
+}
+
+interface ChordCardProps {
+  chord: string;
+  scale: string;
+  position: number;
+  index: number;
+  isActive: boolean;
+  difficulty: string;
+}
+
+const ChordCard: React.FC<ChordCardProps> = ({ chord, scale, position, index, isActive, difficulty }) => {
+  const getDifficultyColor = (diff: string) => {
+    const colors = {
+      'Intermedio': 'border-blue-300 bg-blue-50',
+      'Avanzado': 'border-green-300 bg-green-50',
+      'Experto': 'border-orange-300 bg-orange-50',
+      'Virtuoso': 'border-purple-300 bg-purple-50',
+      'Demencial': 'border-red-400 bg-red-100',
+      'Imposible': 'border-purple-500 bg-purple-100',
+      'Transcendental': 'border-yellow-400 bg-gradient-to-br from-yellow-50 to-orange-50'
+    };
+    return colors[diff] || 'border-gray-300 bg-gray-50';
   };
 
-  const chordSequences = [
+  return (
+    <div className={`p-3 border-2 rounded-lg transition-all duration-200 hover:shadow-md min-h-[100px] flex flex-col justify-between ${
+      isActive ? 'ring-2 ring-blue-500 bg-blue-100' : getDifficultyColor(difficulty)
+    }`}>
+      <div className="text-center">
+        <div className="text-xs text-gray-500 mb-1">#{index + 1}</div>
+        <div className="font-bold text-sm leading-tight mb-1 break-words">{chord}</div>
+        <div className="text-xs text-gray-600 leading-tight break-words">{scale}</div>
+      </div>
+      <div className="text-xs text-center text-gray-500 mt-2">
+        Pos. {position}
+      </div>
+    </div>
+  );
+};
+
+const ChordExplorer: React.FC = () => {
+  // Estados principales
+  const [currentPhase, setCurrentPhase] = useState(1);
+  const [currentSequence, setCurrentSequence] = useState(0);
+  const [tempo, setTempo] = useState(80);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [completedExercises, setCompletedExercises] = useState<Set<string>>(new Set());
+  const [activeExercise, setActiveExercise] = useState<string | null>(null);
+  const [exerciseTimer, setExerciseTimer] = useState(0);
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
+
+  // Secuencias de acordes
+  const chordSequences: ChordSequence[] = [
+    // FASE 1 - Intermedio
     {
-      name: "Secuencia 1 - Mayor/Dórico/Bebop",
-      chords: ["Cmaj9", "Dm11", "G13", "Em7b5", "Am9", "F#m7b5", "Bm7b5", "E7alt", "Fmaj7#11", "C6/9"],
-      scales: ["Mayor", "Dórico", "Bebop", "Locrio", "Menor Natural", "Menor Armónica", "Locrio", "Alterada", "Lidio", "Mayor"],
+      name: "Construcción Básica I-vi-IV-V",
+      chords: ["Cmaj7", "Am7", "Fmaj7", "G7"],
+      scales: ["Mayor", "Menor", "Lidio", "Mixolidio"],
+      positions: [8, 5, 1, 3],
       difficulty: "Intermedio",
-      positions: ["VIII", "V", "III", "VII", "V", "II", "VII", "VII", "I", "III"],
-      phase: 1,
-      tempoRange: [60, 80]
+      tempoRange: [60, 90],
+      phase: 1
     },
     {
-      name: "Secuencia 2 - Frigio/Húngara/Japonesa",
-      chords: ["Dm(maj7)", "Bb7#11", "F#dim7", "Cmaj7#5", "Ab7b5", "Gm6/9", "D7#9#11", "Em7add11", "A7sus4b9", "Dm9"],
-      scales: ["Menor Melódica", "Lidio", "Disminuida", "Tonos Enteros", "Frigio", "Dórico", "Húngara", "Japonesa", "Frigio", "Menor Natural"],
+      name: "Tensiones Básicas con 9nas",
+      chords: ["Cmaj9", "Dm9", "Em7", "Fmaj9", "G9", "Am9"],
+      scales: ["Mayor", "Dórico", "Frigio", "Lidio", "Mixolidio", "Menor"],
+      positions: [8, 10, 12, 1, 3, 5],
       difficulty: "Intermedio",
-      positions: ["V", "VI", "II", "III", "IV", "III", "V", "VII", "V", "V"],
-      phase: 1,
-      tempoRange: [60, 90]
+      tempoRange: [70, 100],
+      phase: 1
     },
+
+    // FASE 2 - Avanzado
     {
-      name: "Secuencia 3 - Alterada/Bebop/Mixolidio",
-      chords: ["G7#5#9", "Cmaj9#11", "Am7b5", "D7b9b13", "Gm(maj9)", "C13", "F7#11", "Bm7b5", "Em9", "A7alt"],
-      scales: ["Alterada", "Lidio", "Locrio", "Frigio", "Menor Melódica", "Mixolidio", "Bebop", "Menor Armónica", "Dórico", "Alterada"],
+      name: "Colores Modales Avanzados",
+      chords: ["Cmaj7#11", "Dm7", "Em7b5", "Fmaj7#11", "G7alt", "Am(maj7)"],
+      scales: ["Lidio", "Dórico", "Locrio", "Lidio", "Alterada", "Menor Armónica"],
+      positions: [8, 10, 12, 1, 3, 5],
       difficulty: "Avanzado",
-      positions: ["III", "VIII", "V", "X", "III", "VIII", "I", "VII", "VII", "V"],
-      phase: 2,
-      tempoRange: [70, 100]
-    },
-    {
-      name: "Secuencia 4 - Drop 2 Avanzada",
-      chords: ["Fmaj13#11", "Dm9/F", "G7#5b9", "Em7b5/G", "Am(maj9)", "F#m7b5/A", "B7alt/D#", "Em11b5", "A7b13#9", "Dm(maj7)"],
-      scales: ["Lidio", "Dórico", "Alterada", "Locrio", "Menor Melódica", "Menor Armónica", "Alterada", "Locrio", "Alterada", "Menor Melódica"],
-      difficulty: "Avanzado",
-      positions: ["I", "I", "III", "III", "V", "V", "VII", "VII", "V", "V"],
-      phase: 2,
-      tempoRange: [80, 110]
-    },
-    {
-      name: "Secuencia 5 - Híbrido Picking Complex",
-      chords: ["C7#11/G", "Am7b5add11", "D7alt/C", "Gm(maj7)/D", "C13b9", "F7#11b13", "Bm7b5/F", "E7#9b13", "Am6/9b5", "Dm(maj13)"],
-      scales: ["Lidio", "Locrio", "Alterada", "Menor Melódica", "Mixolidio", "Lidio", "Locrio", "Alterada", "Menor Natural", "Menor Melódica"],
-      difficulty: "Avanzado",
-      positions: ["III", "V", "III", "V", "VIII", "I", "VII", "VII", "V", "V"],
-      phase: 3,
-      tempoRange: [90, 130]
-    },
-    {
-      name: "Secuencia 6 - Tapping & Extended Range",
-      chords: ["Em11addb9", "A7#9b13sus4", "Dm(maj7)add11", "G13b5b9", "Cmaj9#11/E", "F#m7b5addb13", "B7alt/A", "Em7b5add#9", "Am(maj9)b6", "D7#11b13"],
-      scales: ["Frigio", "Alterada", "Menor Melódica", "Alterada", "Lidio", "Locrio", "Alterada", "Locrio", "Menor Armónica", "Alterada"],
-      difficulty: "Experto",
-      positions: ["XII", "V", "X", "III", "VIII", "II", "VII", "VII", "V", "X"],
-      phase: 3,
-      tempoRange: [100, 150]
-    },
-    {
-      name: "Secuencia 7 - Wide Interval Voicings",
-      chords: ["Fmaj7b5add9", "Dm7b5b9add11", "G7#5b9add#11", "Cmaj7add#9#11", "Am7addb13b9", "D7altadd#4", "Gm(maj7)add#5", "C7b5addb9#11", "Fmaj9b6add#4", "Bb13b5add#9"],
-      scales: ["Lidio", "Locrio", "Alterada", "Lidio", "Menor Natural", "Alterada", "Menor Melódica", "Alterada", "Lidio", "Mixolidio"],
-      difficulty: "Experto",
-      positions: ["I", "V", "III", "VIII", "V", "X", "III", "VIII", "I", "VI"],
-      phase: 4,
-      tempoRange: [110, 160]
-    },
-    {
-      name: "Secuencia 8 - Quartal/Quintal Stack",
-      chords: ["Dm11/A", "G7sus4addb9#11", "Cm(maj7)sus4add#5", "F13sus2add#4", "Bm7b5sus4addb13", "E7altsus4add#9", "Am7sus4addb6b9", "D7susb2add#5#11", "Gm(maj9)sus4", "C13sus4b5add#9"],
-      scales: ["Dórico", "Mixolidio", "Menor Melódica", "Lidio", "Locrio", "Alterada", "Menor Natural", "Alterada", "Menor Melódica", "Mixolidio"],
-      difficulty: "Experto",
-      positions: ["V", "III", "III", "I", "VII", "VII", "V", "X", "III", "VIII"],
-      phase: 4,
-      tempoRange: [120, 170]
-    },
-    {
-      name: "Secuencia 9 - Extended Technique Master",
-      chords: ["Em7b5b9/D", "A7#5#9#11/C#", "Dm(maj13)/C", "G7b5b9#11/F", "Cmaj9#11/B", "F#m7b5#11/E", "B7altb13/A", "Em(maj7)#5/D#", "Am9b13/G", "D7#9#11b13/C"],
-      scales: ["Locrio", "Alterada", "Menor Melódica", "Alterada", "Lidio", "Locrio", "Alterada", "Menor Melódica", "Menor Natural", "Alterada"],
-      difficulty: "Virtuoso",
-      positions: ["VII", "IV", "VIII", "I", "VII", "II", "VII", "XI", "III", "X"],
-      phase: 4,
-      tempoRange: [130, 180]
-    },
-    {
-      name: "Secuencia 10 - Ultimate Guitar Challenge",
-      chords: ["Fm(maj7)#11/Eb", "Bb7b5#9add#11/Ab", "Ebmaj9b6/D", "Am7b5b13/G", "D7#5#9#11/C", "Gm(maj9)#11/F", "C7altb13add#4/Bb", "Fm7b5#9/Eb", "Bb13b5#11/Ab", "Ebmaj7#5b9/D"],
-      scales: ["Menor Armónica", "Alterada", "Lidio", "Locrio", "Alterada", "Menor Melódica", "Alterada", "Locrio", "Mixolidio", "Lidio"],
-      difficulty: "Virtuoso",
-      positions: ["VI", "VI", "VI", "III", "VIII", "III", "VI", "VI", "VI", "VI"],
-      phase: 4,
-      tempoRange: [140, 200]
-    },
-    // NUEVAS SECUENCIAS EXTREMAS
-    {
-      name: "Secuencia 11 - Modulación Constante",
-      chords: ["C#m(maj7)#11/B", "F7altb13/Eb", "Bbmaj9#5/A", "Dm7b5b9/C", "G#7#9#11/F#", "Cmaj13b5/B", "F#m(maj9)/E", "B7altb13/A", "Em7#11b13/D", "A7#5b9/G"],
-      scales: ["Menor Melódica", "Alterada", "Lidio", "Locrio", "Alterada", "Lidio", "Menor Melódica", "Alterada", "Locrio", "Alterada"],
-      difficulty: "Demencial",
-      positions: ["IX", "VI", "VI", "V", "IV", "VII", "VII", "VII", "VII", "V"],
-      phase: 5,
-      tempoRange: [150, 220],
-      specialTechnique: "Modulación cada 2 acordes + Saltos de posición extremos"
-    },
-    {
-      name: "Secuencia 12 - Polirritmo Armónico",
-      chords: ["Fm(maj13)#11/D#", "Bb7#5b9add#4/G#", "Ebmaj7b6#11/C#", "Am7b5#9b13/F#", "D7altb13add#5/B", "Gm(maj7)#5/E", "C7b5#9#11/A", "Fm7#11b13/D", "Bb13altb5/G", "Ebmaj9#5b13/C"],
-      scales: ["Menor Armónica", "Alterada", "Lidio", "Locrio", "Alterada", "Menor Melódica", "Alterada", "Dórico", "Alterada", "Lidio"],
-      difficulty: "Demencial",
-      positions: ["VI", "IV", "XI", "II", "VII", "III", "V", "X", "III", "VIII"],
-      phase: 5,
-      tempoRange: [160, 240],
-      specialTechnique: "Ritmo 7/8 + Voicings imposibles + Cambios de afinación mental"
-    },
-    {
-      name: "Secuencia 13 - Microtonalidad Simulada",
-      chords: ["C7#9b13add#4/B", "F#m(maj7)b5#11/E", "Bb7altb9add#5/Ab", "Ebmaj13#5b9/D", "G#m7b5#9b13/F#", "C#7alt#11b5/B", "Fmaj7#5b13add#9/E", "Bm(maj9)b5#11/A", "E7#5#9b13add#4/D", "Am(maj13)#5b9/G"],
-      scales: ["Alterada", "Menor Armónica", "Alterada", "Lidio", "Locrio", "Alterada", "Lidio", "Menor Melódica", "Alterada", "Menor Armónica"],
-      difficulty: "Imposible",
-      positions: ["VII", "VII", "VI", "VI", "IV", "VII", "I", "V", "VII", "III"],
-      phase: 6,
-      tempoRange: [180, 260],
-      specialTechnique: "Bends microtonales + Tapping a 3 manos + Preparación mental extrema"
-    },
-    {
-      name: "Secuencia 14 - Caos Controlado",
-      chords: ["Db7#5#9#11b13/C", "Gmaj7#5b9add#4/F#", "Cm(maj13)b5#11/Bb", "F#7altb9add#5/E", "Bmaj9#11b13/A#", "Em7b5#9add#4/D", "A7#5altb13/G#", "Dm(maj7)#5b9/C#", "G#7#9#11b5/F#", "Cmaj13altb5/B"],
-      scales: ["Alterada", "Lidio", "Menor Armónica", "Alterada", "Lidio", "Locrio", "Alterada", "Menor Melódica", "Alterada", "Lidio"],
-      difficulty: "Imposible",
-      positions: ["I", "II", "III", "V", "VII", "VII", "IV", "V", "IV", "VII"],
-      phase: 6,
-      tempoRange: [200, 280],
-      specialTechnique: "Cambio de posición cada acorde + Técnicas simultáneas + Memoria fotográfica"
-    },
-    {
-      name: "Secuencia 15 - Transcendencia Musical",
-      chords: ["F#m(maj9)#11b13/E#", "B7#5altb9add#4/A#", "Emaj13#5b9/D#", "A#m7b5#9#11/G#", "D#7altb13add#5/C#", "G#m(maj7)#5b9/F#", "C#7#9#11b5add#4/B", "F#maj9altb13/E#", "Bm(maj13)#5b9/A#", "E7#5#9#11b13/D#"],
-      scales: ["Menor Melódica", "Alterada", "Lidio", "Locrio", "Alterada", "Menor Armónica", "Alterada", "Lidio", "Menor Melódica", "Alterada"],
-      difficulty: "Transcendental",
-      positions: ["II", "VII", "IV", "VI", "VI", "II", "IV", "II", "VII", "IV"],
-      phase: 7,
-      tempoRange: [220, 300],
-      specialTechnique: "Ejecución ciega + Improvisación simultánea + Canto de intervalos + Meditación activa"
-    },
-    // NUEVAS SECUENCIAS CEREBRALES EXTREMAS
-    {
-      name: "Secuencia 16 - Análisis Armónico en Tiempo Real",
-      chords: ["Cmaj7#11/E", "F#m7b5/A", "B7alt/D#", "Em(maj9)/G", "Am7b13/C", "D7#9#11/F#", "Gmaj9b5/B", "C#m7b5/E", "F#7alt/A#", "Bm(maj7)/D"],
-      scales: ["Lidio", "Locrio", "Alterada", "Menor Melódica", "Menor Natural", "Alterada", "Lidio", "Locrio", "Alterada", "Menor Melódica"],
-      difficulty: "Cerebral",
-      positions: ["I", "V", "VII", "III", "V", "II", "III", "VII", "II", "VII"],
-      phase: 8,
       tempoRange: [80, 120],
-      specialTechnique: "Análisis funcional + Identificación de escalas + Nomenclatura en tiempo real",
-      mentalChallenge: "Nombra la función armónica de cada acorde mientras tocas"
+      phase: 2
     },
     {
-      name: "Secuencia 17 - Transposición Mental Extrema",
-      chords: ["Dm7", "G7", "Cmaj7", "Am7", "F#m7b5", "B7", "Em7", "C#m7b5", "F#7", "Bm7"],
-      scales: ["Dórico", "Mixolidio", "Mayor", "Menor Natural", "Locrio", "Mixolidio", "Menor Natural", "Locrio", "Mixolidio", "Menor Natural"],
-      difficulty: "Cerebral",
-      positions: ["V", "III", "III", "V", "II", "VII", "VII", "IV", "II", "VII"],
-      phase: 8,
-      tempoRange: [60, 100],
-      specialTechnique: "Transposición mental + Doble procesamiento + Análisis comparativo",
-      mentalChallenge: "Toca en Dm pero piensa en Gm - transpón mentalmente cada acorde"
+      name: "Sustituciones Cromáticas",
+      chords: ["Cmaj7", "C#dim7", "Dm7", "D#dim7", "Em7", "F#m7b5", "G7"],
+      scales: ["Mayor", "Disminuida", "Dórico", "Disminuida", "Frigio", "Locrio", "Mixolidio"],
+      positions: [8, 9, 10, 11, 12, 2, 3],
+      difficulty: "Avanzado",
+      tempoRange: [90, 130],
+      phase: 2
+    },
+
+    // FASE 3 - Experto
+    {
+      name: "Rearmónización Compleja",
+      chords: ["Cmaj13#11", "F#7alt", "Em11", "A7#9#11", "Dm9", "G13sus4", "Cmaj7add6"],
+      scales: ["Lidio", "Alterada", "Dórico", "Alterada", "Dórico", "Mixolidio", "Mayor"],
+      positions: [8, 2, 12, 5, 10, 3, 8],
+      difficulty: "Experto",
+      tempoRange: [100, 160],
+      phase: 3
     },
     {
-      name: "Secuencia 18 - Memoria Fotográfica Total",
-      chords: ["Ebmaj9#11", "Cm7b5", "Fm(maj7)", "Bb13", "Gm7b5", "C7alt", "Fm9", "Dm7b5", "G7#9", "Cm(maj7)", "Abmaj7#11", "Fm7", "Bb7sus4", "Ebmaj7", "Cm9", "F7#11", "Bbmaj9", "Gm7", "C7alt", "Fm(maj9)"],
-      scales: ["Lidio", "Locrio", "Menor Melódica", "Mixolidio", "Locrio", "Alterada", "Menor Natural", "Locrio", "Alterada", "Menor Melódica", "Lidio", "Menor Natural", "Mixolidio", "Mayor", "Menor Natural", "Lidio", "Mayor", "Menor Natural", "Alterada", "Menor Melódica"],
-      difficulty: "Cerebral",
-      positions: ["VI", "III", "I", "VI", "III", "III", "I", "V", "III", "III", "IV", "I", "VI", "VI", "III", "I", "VI", "III", "III", "I"],
-      phase: 8,
-      tempoRange: [40, 80],
-      specialTechnique: "Memorización perfecta + Ejecución ciega + Análisis teórico simultáneo",
-      mentalChallenge: "Memoriza los 20 acordes, toca sin mirar, analiza cada función armónica"
+      name: "Modulación por Terceras",
+      chords: ["Cmaj7", "Emaj7", "G#maj7", "Bmaj7", "D#maj7", "Gmaj7", "Cmaj7"],
+      scales: ["Mayor", "Mayor", "Mayor", "Mayor", "Mayor", "Mayor", "Mayor"],
+      positions: [8, 4, 11, 7, 2, 3, 8],
+      difficulty: "Experto",
+      tempoRange: [110, 170],
+      phase: 3
+    },
+
+    // FASE 4 - Virtuoso
+    {
+      name: "Politonalidad Extrema",
+      chords: ["Cmaj7#11/G", "F#maj7#5/C#", "Bbmaj13/F", "Emaj7alt/B", "Amaj9#11/E"],
+      scales: ["Lidio", "Tonos Enteros", "Lidio", "Alterada", "Lidio"],
+      positions: [15, 9, 6, 7, 12],
+      difficulty: "Virtuoso",
+      tempoRange: [140, 200],
+      phase: 4
+    },
+    {
+      name: "Secuencia Imposible de Coltrane",
+      chords: ["Cmaj7", "E7alt", "Amaj7", "C#7alt", "F#maj7", "Bb7alt", "Ebmaj7", "G7alt"],
+      scales: ["Mayor", "Alterada", "Mayor", "Alterada", "Mayor", "Alterada", "Mayor", "Alterada"],
+      positions: [8, 6, 5, 4, 2, 6, 6, 3],
+      difficulty: "Virtuoso",
+      tempoRange: [160, 220],
+      phase: 4
+    },
+
+    // FASE 5 - Demencial (Retos Mentales)
+    {
+      name: "Modulación Cada 2 Acordes",
+      chords: ["Cmaj7", "Am7", "F#maj7", "D#m7", "Bmaj7", "G#m7", "Emaj7", "C#m7"],
+      scales: ["Mayor", "Menor", "Mayor", "Menor", "Mayor", "Menor", "Mayor", "Menor"],
+      positions: [8, 5, 2, 11, 7, 4, 12, 9],
+      difficulty: "Demencial",
+      tempoRange: [150, 240],
+      phase: 5
+    },
+    {
+      name: "Polirritmo 7/8 con Armonía Compleja",
+      chords: ["Cmaj13#11", "F#7alt", "Bmaj9#5", "E7#9b13", "Amaj7#11", "D7alt", "Gmaj13"],
+      scales: ["Lidio", "Alterada", "Tonos Enteros", "Alterada", "Lidio", "Alterada", "Lidio"],
+      positions: [8, 2, 7, 6, 5, 10, 3],
+      difficulty: "Demencial",
+      tempoRange: [170, 260],
+      phase: 5
+    },
+
+    // FASE 6 - Imposible (Técnica Extrema)
+    {
+      name: "Tapping + Hybrid + Bends Simultáneos",
+      chords: ["Cmaj7#11add13", "F#7alt#9#11", "Bmaj13#5", "E7#9b13add11", "Amaj7#11add6"],
+      scales: ["Lidio", "Alterada", "Tonos Enteros", "Alterada", "Lidio"],
+      positions: [15, 9, 7, 6, 12],
+      difficulty: "Imposible",
+      tempoRange: [180, 280],
+      phase: 6
+    },
+    {
+      name: "Saltos de 7+ Trastes por Acorde",
+      chords: ["Cmaj7", "F#maj7", "Bmaj7", "Emaj7", "Amaj7", "Dmaj7", "Gmaj7"],
+      scales: ["Mayor", "Mayor", "Mayor", "Mayor", "Mayor", "Mayor", "Mayor"],
+      positions: [3, 14, 7, 12, 5, 10, 15],
+      difficulty: "Imposible",
+      tempoRange: [200, 300],
+      phase: 6
+    },
+
+    // FASE 7 - Transcendental
+    {
+      name: "Meditación Armónica Transcendental",
+      chords: ["Cmaj13#11", "∞", "Fmaj13#11", "∞", "Gmaj13#11", "∞"],
+      scales: ["Lidio", "Silencio", "Lidio", "Silencio", "Lidio", "Silencio"],
+      positions: [8, 0, 1, 0, 3, 0],
+      difficulty: "Transcendental",
+      tempoRange: [220, 300],
+      phase: 7
+    },
+
+    // FASE 8 - Retos Cerebrales
+    {
+      name: "Análisis Funcional en Tiempo Real",
+      chords: ["Cmaj7", "A7alt", "Dm9", "G13sus4", "Em7b5", "A7b9", "Dm6/9", "G7alt", "Cmaj9"],
+      scales: ["Mayor", "Alterada", "Dórico", "Mixolidio", "Locrio", "Alterada", "Dórico", "Alterada", "Mayor"],
+      positions: [8, 5, 10, 3, 12, 5, 10, 3, 8],
+      difficulty: "Demencial",
+      tempoRange: [120, 180],
+      phase: 8
+    },
+    {
+      name: "Transposición Mental Doble",
+      chords: ["Dm7", "G7", "Cmaj7", "Am7", "F#m7", "B7", "Emaj7", "C#m7"],
+      scales: ["Dórico", "Mixolidio", "Mayor", "Menor", "Dórico", "Mixolidio", "Mayor", "Menor"],
+      positions: [10, 3, 8, 5, 2, 7, 12, 9],
+      difficulty: "Demencial",
+      tempoRange: [100, 160],
+      phase: 8
+    },
+    {
+      name: "Memoria Fotográfica - 20 Acordes",
+      chords: [
+        "Cmaj7", "F#7alt", "Bmaj7", "E7#9", "Amaj7", "D7alt", "Gmaj7", "C#7#11",
+        "F#maj7", "B7alt", "Emaj7", "A7#9", "Dmaj7", "G7alt", "Cmaj7", "F7#11",
+        "Bbmaj7", "E7alt", "Amaj7", "D7#9"
+      ],
+      scales: [
+        "Mayor", "Alterada", "Mayor", "Alterada", "Mayor", "Alterada", "Mayor", "Alterada",
+        "Mayor", "Alterada", "Mayor", "Alterada", "Mayor", "Alterada", "Mayor", "Alterada",
+        "Mayor", "Alterada", "Mayor", "Alterada"
+      ],
+      positions: [8, 2, 7, 6, 5, 10, 3, 9, 2, 7, 12, 5, 10, 3, 8, 1, 6, 6, 5, 10],
+      difficulty: "Demencial",
+      tempoRange: [80, 140],
+      phase: 8
     }
   ];
 
-  const exercises = {
-    1: {
-      title: "FASE 1: Construcción Gradual",
-      description: "Familiarízate con tensiones básicas usando las primeras secuencias",
-      exercises: [
-        { 
-          name: "Acordes Base + Una Tensión", 
-          duration: "15 min", 
-          sequence: 0,
-          instructions: "Toca la Secuencia 1 a 60 BPM. Enfócate en la limpieza de cada acorde.",
-          targetTempo: 60
-        },
-        { 
-          name: "Cadenas de Inversiones", 
-          duration: "10 min", 
-          sequence: 1,
-          instructions: "Usa la Secuencia 2. Practica las inversiones cambiando el bajo.",
-          targetTempo: 70
-        }
-      ]
-    },
-    2: {
-      title: "FASE 2: Exploración Sonora",
-      description: "Descubre el carácter de cada escala con secuencias intermedias",
-      exercises: [
-        { 
-          name: "Pintura Sonora - Alterada", 
-          duration: "10 min", 
-          sequence: 2,
-          instructions: "Secuencia 3 a 70 BPM. Escucha las tensiones alteradas y su resolución.",
-          targetTempo: 70
-        },
-        { 
-          name: "Pintura Sonora - Drop 2", 
-          duration: "10 min", 
-          sequence: 3,
-          instructions: "Secuencia 4 a 80 BPM. Siente la sonoridad de los drop 2 voicings.",
-          targetTempo: 80
-        },
-        { 
-          name: "Comparación Directa", 
-          duration: "15 min", 
-          sequence: 2,
-          instructions: "Alterna entre Secuencias 3 y 4. Compara los colores armónicos.",
-          targetTempo: 75
-        }
-      ]
-    },
-    3: {
-      title: "FASE 3: Fluidez y Velocidad",
-      description: "Automatiza las posiciones con secuencias avanzadas",
-      exercises: [
-        { 
-          name: "Secuencias Rápidas", 
-          duration: "20 min", 
-          sequence: 4,
-          instructions: "Secuencia 5 (Hybrid Picking). Empieza a 90 BPM, sube hasta 130 BPM.",
-          targetTempo: 110
-        },
-        { 
-          name: "Técnica Extendida", 
-          duration: "15 min", 
-          sequence: 5,
-          instructions: "Secuencia 6 (Tapping). Usa técnicas avanzadas. 100-150 BPM.",
-          targetTempo: 125
-        }
-      ]
-    },
-    4: {
-      title: "FASE 4: Aplicación Musical",
-      description: "Usa los acordes en contexto musical con secuencias expertas",
-      exercises: [
-        { 
-          name: "Reharmonización Creativa", 
-          duration: "25 min", 
-          sequence: 6,
-          instructions: "Secuencia 7 (Wide Voicings). Crea variaciones armónicas. 110-160 BPM.",
-          targetTempo: 135
-        },
-        { 
-          name: "Quartal Harmony", 
-          duration: "20 min", 
-          sequence: 7,
-          instructions: "Secuencia 8 (Quartal). Explora armonía por cuartas. 120-170 BPM.",
-          targetTempo: 145
-        },
-        { 
-          name: "Técnica Virtuosa", 
-          duration: "30 min", 
-          sequence: 8,
-          instructions: "Secuencia 9 (Extended Technique). Técnicas avanzadas. 130-180 BPM.",
-          targetTempo: 155
-        },
-        { 
-          name: "Desafío Final", 
-          duration: "35 min", 
-          sequence: 9,
-          instructions: "Secuencia 10 (Ultimate Challenge). ¡El reto máximo! 140-200 BPM.",
-          targetTempo: 170
-        }
-      ]
-    },
-    5: {
-      title: "FASE 5: Retos Mentales Extremos",
-      description: "Modulaciones constantes y cambios de escala que desafían tu comprensión armónica",
-      exercises: [
-        { 
-          name: "Modulación Cada 2 Acordes", 
-          duration: "45 min", 
-          sequence: 10,
-          instructions: "Secuencia 11. Cambia de centro tonal cada 2 acordes. Memoriza las modulaciones.",
-          targetTempo: 150,
-          mentalChallenge: "Identifica la nueva tonalidad en tiempo real"
-        },
-        { 
-          name: "Polirritmo Armónico 7/8", 
-          duration: "40 min", 
-          sequence: 11,
-          instructions: "Secuencia 12 en compás 7/8. Mantén el patrón rítmico mientras cambias voicings.",
-          targetTempo: 160,
-          mentalChallenge: "Coordina ritmo irregular con armonía compleja"
-        },
-        { 
-          name: "Improvisación Sobre Caos", 
-          duration: "50 min", 
-          sequence: 10,
-          instructions: "Improvisa melodías sobre Secuencia 11. Cada nota debe justificar la escala.",
-          targetTempo: 140,
-          mentalChallenge: "Improvisa coherentemente sobre modulaciones extremas"
-        }
-      ]
-    },
-    6: {
-      title: "FASE 6: Técnica Imposible",
-      description: "Combinaciones de técnicas que parecen físicamente imposibles",
-      exercises: [
-        { 
-          name: "Tapping + Hybrid + Bends", 
-          duration: "60 min", 
-          sequence: 12,
-          instructions: "Secuencia 13. Tapping con mano derecha, hybrid picking, bends microtonales simultáneos.",
-          targetTempo: 180,
-          mentalChallenge: "Coordina 3 técnicas avanzadas simultáneamente"
-        },
-        { 
-          name: "Cambio de Posición Extremo", 
-          duration: "55 min", 
-          sequence: 13,
-          instructions: "Secuencia 14. Cada acorde en posición diferente. Saltos de 5+ trastes.",
-          targetTempo: 200,
-          mentalChallenge: "Navegación instantánea del mástil completo"
-        },
-        { 
-          name: "Ejecución Ciega Total", 
-          duration: "70 min", 
-          sequence: 12,
-          instructions: "Secuencia 13 con ojos cerrados. Solo guíate por el tacto y el oído.",
-          targetTempo: 160,
-          mentalChallenge: "Ejecución perfecta sin referencia visual"
-        }
-      ]
-    },
-    7: {
-      title: "FASE 7: Transcendencia Musical",
-      description: "El nivel final. Maestría absoluta que trasciende la técnica",
-      exercises: [
-        { 
-          name: "Meditación Armónica", 
-          duration: "90 min", 
-          sequence: 14,
-          instructions: "Secuencia 15. Toca mientras meditas. Cada acorde debe ser una experiencia espiritual.",
-          targetTempo: 220,
-          mentalChallenge: "Fusión total entre mente, cuerpo y música"
-        },
-        { 
-          name: "Improvisación Transcendental", 
-          duration: "120 min", 
-          sequence: 14,
-          instructions: "Crea música nueva usando Secuencia 15 como base. Trasciende las reglas.",
-          targetTempo: 250,
-          mentalChallenge: "Creatividad pura sin limitaciones técnicas"
-        },
-        { 
-          name: "Enseñanza Simultánea", 
-          duration: "150 min", 
-          sequence: 14,
-          instructions: "Toca Secuencia 15 mientras explicas la teoría a un estudiante imaginario.",
-          targetTempo: 280,
-          mentalChallenge: "Ejecución perfecta + enseñanza + análisis teórico simultáneo"
-        }
-      ]
-    },
-    8: {
-      title: "FASE 8: Retos Cerebrales Extremos",
-      description: "Desafíos que requieren procesamiento mental múltiple y análisis teórico en tiempo real",
-      exercises: [
-        { 
-          name: "Análisis Funcional en Vivo", 
-          duration: "60 min", 
-          sequence: 15,
-          instructions: "Secuencia 16. Mientras tocas, di en voz alta la función de cada acorde (I, V7, etc).",
-          targetTempo: 80,
-          mentalChallenge: "Ejecución + análisis funcional + verbalización simultánea"
-        },
-        { 
-          name: "Transposición Mental Doble", 
-          duration: "75 min", 
-          sequence: 16,
-          instructions: "Secuencia 17 en Dm, pero piensa como si fuera Gm. Transpón mentalmente cada acorde.",
-          targetTempo: 60,
-          mentalChallenge: "Tocar en una tonalidad mientras procesas otra diferente"
-        },
-        { 
-          name: "Memoria Fotográfica + Análisis", 
-          duration: "90 min", 
-          sequence: 17,
-          instructions: "Memoriza Secuencia 18 (20 acordes). Toca sin mirar mientras analizas cada función.",
-          targetTempo: 40,
-          mentalChallenge: "Memorización perfecta + ejecución ciega + análisis teórico"
-        },
-        { 
-          name: "Profesor Virtual", 
-          duration: "120 min", 
-          sequence: 15,
-          instructions: "Enseña Secuencia 16 a un estudiante imaginario mientras la ejecutas perfectamente.",
-          targetTempo: 70,
-          mentalChallenge: "Ejecución + enseñanza + análisis pedagógico simultáneo"
-        }
-      ]
-    }
+  // Ejercicios por fase
+  const exercisesByPhase: Record<number, Exercise[]> = {
+    1: [
+      {
+        id: "1-1",
+        name: "Construcción Gradual",
+        description: "Construye acordes nota por nota, añadiendo tensiones progresivamente",
+        duration: 15,
+        difficulty: "Intermedio",
+        techniques: ["Fingerpicking", "Chord Building"],
+        sequenceIds: [0],
+        instructions: [
+          "Toca cada acorde como tríada primero",
+          "Añade la 7ma",
+          "Añade la 9na si está disponible",
+          "Mantén cada voicing 4 tiempos"
+        ]
+      },
+      {
+        id: "1-2", 
+        name: "Tensiones Básicas",
+        description: "Explora las tensiones naturales en contexto tonal",
+        duration: 20,
+        difficulty: "Intermedio",
+        techniques: ["Extended Chords", "Voice Leading"],
+        sequenceIds: [1],
+        instructions: [
+          "Enfócate en las 9nas naturales",
+          "Observa cómo cada tensión cambia el color",
+          "Practica transiciones suaves entre acordes",
+          "Tempo constante, sin acelerar"
+        ]
+      }
+    ],
+    2: [
+      {
+        id: "2-1",
+        name: "Exploración Modal",
+        description: "Descubre los colores únicos de cada modo",
+        duration: 25,
+        difficulty: "Avanzado", 
+        techniques: ["Modal Harmony", "Color Tones"],
+        sequenceIds: [2],
+        instructions: [
+          "Identifica el modo de cada acorde",
+          "Enfatiza las notas características de cada modo",
+          "Usa la #11 en acordes lidios",
+          "Siente la diferencia entre cada color modal"
+        ]
+      },
+      {
+        id: "2-2",
+        name: "Sustituciones Cromáticas",
+        description: "Domina el movimiento cromático en progresiones",
+        duration: 30,
+        difficulty: "Avanzado",
+        techniques: ["Chromatic Movement", "Diminished Passing"],
+        sequenceIds: [3],
+        instructions: [
+          "Los acordes disminuidos son de paso",
+          "Mantén el bajo cromático",
+          "Cada dim7 dura solo 2 tiempos",
+          "Enfócate en la fluidez del movimiento"
+        ]
+      }
+    ],
+    3: [
+      {
+        id: "3-1",
+        name: "Rearmónización Avanzada",
+        description: "Transforma progresiones simples en complejas",
+        duration: 35,
+        difficulty: "Experto",
+        techniques: ["Reharmonization", "Tritone Substitution"],
+        sequenceIds: [4],
+        instructions: [
+          "Cada acorde tiene múltiples tensiones",
+          "Usa sustituciones tritonales",
+          "Mantén la función armónica clara",
+          "Practica saltos de posición amplios"
+        ]
+      },
+      {
+        id: "3-2",
+        name: "Modulación por Terceras",
+        description: "Navega por tonalidades distantes con elegancia",
+        duration: 40,
+        difficulty: "Experto",
+        techniques: ["Modulation", "Wide Position Jumps"],
+        sequenceIds: [5],
+        instructions: [
+          "Cada acorde está en tonalidad diferente",
+          "Saltos de posición de 4+ trastes",
+          "Mantén la conexión melódica",
+          "Visualiza el círculo de terceras"
+        ]
+      }
+    ],
+    4: [
+      {
+        id: "4-1",
+        name: "Politonalidad Extrema",
+        description: "Combina múltiples centros tonales simultáneamente",
+        duration: 45,
+        difficulty: "Virtuoso",
+        techniques: ["Polytonality", "Advanced Voicings"],
+        sequenceIds: [6],
+        instructions: [
+          "Acordes slash con politonalidad",
+          "Mantén ambos centros tonales claros",
+          "Posiciones extremas del mástil",
+          "Requiere técnica de stretching avanzada"
+        ]
+      },
+      {
+        id: "4-2",
+        name: "Coltrane Changes",
+        description: "La secuencia más desafiante del jazz",
+        duration: 50,
+        difficulty: "Virtuoso",
+        techniques: ["Coltrane Changes", "Rapid Modulation"],
+        sequenceIds: [7],
+        instructions: [
+          "Modulación por terceras mayores",
+          "Cambio de tonalidad cada 2 acordes",
+          "Velocidad extrema requerida",
+          "Memorización perfecta necesaria"
+        ]
+      }
+    ],
+    5: [
+      {
+        id: "5-1",
+        name: "Modulación Mental Constante",
+        description: "Cambia de tonalidad cada 2 acordes mientras analizas",
+        duration: 60,
+        difficulty: "Demencial",
+        techniques: ["Mental Modulation", "Real-time Analysis"],
+        mentalChallenges: ["Análisis funcional simultáneo", "Procesamiento de múltiples tonalidades"],
+        sequenceIds: [8],
+        instructions: [
+          "Di en voz alta la función de cada acorde",
+          "Identifica la tonalidad de cada par de acordes",
+          "Mantén el tempo mientras analizas",
+          "Procesa 4 tonalidades diferentes en 8 acordes"
+        ],
+        warnings: ["Puede causar fatiga mental extrema", "Requiere concentración absoluta"]
+      },
+      {
+        id: "5-2",
+        name: "Polirritmo 7/8 con Análisis",
+        description: "Ritmo irregular con armonía compleja y análisis teórico",
+        duration: 75,
+        difficulty: "Demencial",
+        techniques: ["Polyrhythm", "Complex Harmony", "Mental Analysis"],
+        mentalChallenges: ["Conteo irregular", "Análisis armónico", "Coordinación asimétrica"],
+        sequenceIds: [9],
+        instructions: [
+          "Cuenta en 7/8: 1-2-3-4-5-6-7",
+          "Analiza la función armónica de cada acorde",
+          "Identifica las alteraciones en tiempo real",
+          "Mantén el polirritmo mientras analizas"
+        ],
+        warnings: ["Extremadamente desafiante mentalmente", "Puede causar confusión rítmica"]
+      }
+    ],
+    6: [
+      {
+        id: "6-1",
+        name: "Técnica Imposible Combinada",
+        description: "Tapping + Hybrid Picking + Bends simultáneos",
+        duration: 90,
+        difficulty: "Imposible",
+        techniques: ["Tapping", "Hybrid Picking", "Bending", "Wide Stretches"],
+        sequenceIds: [10],
+        instructions: [
+          "Tapping con mano derecha en trastes altos",
+          "Hybrid picking en cuerdas medias",
+          "Bends en cuerdas graves",
+          "Todo simultáneamente"
+        ],
+        warnings: ["Riesgo de lesión", "Requiere calentamiento extremo", "Técnica sobrehumana"]
+      },
+      {
+        id: "6-2",
+        name: "Ejecución Ciega Extrema",
+        description: "Toca saltos de 7+ trastes sin mirar el mástil",
+        duration: 120,
+        difficulty: "Imposible",
+        techniques: ["Blind Playing", "Wide Position Jumps", "Muscle Memory"],
+        sequenceIds: [11],
+        instructions: [
+          "Cierra los ojos completamente",
+          "Saltos de 7+ trastes entre acordes",
+          "Confía solo en la memoria muscular",
+          "Mantén la precisión absoluta"
+        ],
+        warnings: ["Extremadamente difícil", "Requiere años de práctica", "Riesgo de notas falsas"]
+      }
+    ],
+    7: [
+      {
+        id: "7-1",
+        name: "Meditación Armónica",
+        description: "Fusión total entre mente, cuerpo y música",
+        duration: 150,
+        difficulty: "Transcendental",
+        techniques: ["Meditation", "Transcendental Technique", "Spiritual Connection"],
+        sequenceIds: [12],
+        instructions: [
+          "Entra en estado meditativo profundo",
+          "Toca desde el alma, no desde la mente",
+          "Los silencios (∞) son tan importantes como las notas",
+          "Conecta con la esencia universal de la música"
+        ],
+        warnings: ["Experiencia transformadora", "Puede cambiar tu percepción musical", "Solo para maestros"]
+      }
+    ],
+    8: [
+      {
+        id: "8-1",
+        name: "Análisis Funcional en Vivo",
+        description: "Ejecuta mientras analizas y verbalizas cada función armónica",
+        duration: 45,
+        difficulty: "Demencial",
+        techniques: ["Real-time Analysis", "Functional Harmony", "Verbal Processing"],
+        mentalChallenges: [
+          "Análisis funcional instantáneo",
+          "Verbalización simultánea", 
+          "Procesamiento multi-tarea",
+          "Memoria teórica perfecta"
+        ],
+        sequenceIds: [13],
+        instructions: [
+          "Di en voz alta: 'Imaj7, VIalt, ii9, V13sus4...'",
+          "Identifica cada sustitución tritonal",
+          "Explica por qué cada acorde funciona",
+          "Mantén tempo perfecto mientras hablas"
+        ],
+        warnings: ["Sobrecarga cognitiva extrema", "Requiere dominio teórico total"]
+      },
+      {
+        id: "8-2",
+        name: "Transposición Mental Doble",
+        description: "Toca en Dm pero piensa como si fuera Gm - procesamiento dual",
+        duration: 60,
+        difficulty: "Demencial", 
+        techniques: ["Mental Transposition", "Dual Processing", "Cognitive Flexibility"],
+        mentalChallenges: [
+          "Procesamiento de dos tonalidades",
+          "Traducción mental constante",
+          "Flexibilidad cognitiva extrema",
+          "Resistencia a la confusión"
+        ],
+        sequenceIds: [14],
+        instructions: [
+          "Toca físicamente en Dm",
+          "Piensa mentalmente como si fuera Gm",
+          "Traduce cada acorde en tiempo real",
+          "Mantén ambas realidades simultáneamente"
+        ],
+        warnings: ["Puede causar confusión mental", "Requiere concentración sobrehumana"]
+      },
+      {
+        id: "8-3",
+        name: "Memoria Fotográfica Total",
+        description: "Memoriza 20 acordes, toca sin mirar, analiza cada función",
+        duration: 90,
+        difficulty: "Demencial",
+        techniques: ["Photographic Memory", "Blind Execution", "Perfect Recall"],
+        mentalChallenges: [
+          "Memorización perfecta de 20 acordes",
+          "Ejecución completamente ciega",
+          "Análisis teórico simultáneo",
+          "Resistencia mental extrema"
+        ],
+        sequenceIds: [15],
+        instructions: [
+          "Estudia la secuencia 5 minutos",
+          "Cierra los ojos y toca de memoria",
+          "Analiza cada acorde mientras lo ejecutas",
+          "Sin errores permitidos"
+        ],
+        warnings: ["Requiere memoria excepcional", "Extremadamente frustrante", "Solo para genios musicales"]
+      },
+      {
+        id: "8-4",
+        name: "Profesor Virtual Extremo",
+        description: "Enseña la secuencia a un estudiante imaginario mientras la ejecutas perfectamente",
+        duration: 120,
+        difficulty: "Demencial",
+        techniques: ["Teaching", "Perfect Execution", "Multitasking"],
+        mentalChallenges: [
+          "Enseñanza simultánea",
+          "Ejecución perfecta",
+          "Explicación pedagógica",
+          "Gestión de múltiples procesos mentales"
+        ],
+        sequenceIds: [13, 14],
+        instructions: [
+          "Explica cada acorde mientras lo tocas",
+          "Enseña las digitaciones correctas",
+          "Corrige errores imaginarios del estudiante",
+          "Mantén paciencia pedagógica perfecta"
+        ],
+        warnings: ["Sobrecarga mental extrema", "Requiere maestría pedagógica", "Puede causar agotamiento"]
+      }
+    ]
   };
 
-  // Persistir progreso en localStorage
-  useEffect(() => {
-    const savedProgress = localStorage.getItem('chordExplorerProgress');
-    if (savedProgress) {
-      setCompletedExercises(JSON.parse(savedProgress));
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem('chordExplorerProgress', JSON.stringify(completedExercises));
-  }, [completedExercises]);
+  // Mapeo de secuencias por fase
+  const phaseSequences: Record<number, number[]> = {
+    1: [0, 1],
+    2: [2, 3], 
+    3: [4, 5],
+    4: [6, 7],
+    5: [8, 9],
+    6: [10, 11],
+    7: [12],
+    8: [13, 14, 15]
+  };
 
   // Timer para ejercicios
   useEffect(() => {
-    let interval;
-    if (isExerciseActive) {
+    let interval: NodeJS.Timeout;
+    if (isTimerRunning) {
       interval = setInterval(() => {
         setExerciseTimer(prev => prev + 1);
       }, 1000);
     }
     return () => clearInterval(interval);
-  }, [isExerciseActive]);
+  }, [isTimerRunning]);
 
-  const startExercise = (phaseNum, exerciseIndex) => {
-    const exercise = exercises[phaseNum].exercises[exerciseIndex];
-    setActiveExercise({ phase: phaseNum, index: exerciseIndex });
-    setCurrentSequence(exercise.sequence);
-    setTempo(exercise.targetTempo);
-    setExerciseTimer(0);
-    setIsExerciseActive(true);
-    setIsPlaying(true);
-  };
-
-  const stopExercise = () => {
-    setActiveExercise(null);
-    setIsExerciseActive(false);
-    setIsPlaying(false);
-    setExerciseTimer(0);
-  };
-
-  const toggleExercise = (phase, exerciseIndex) => {
-    const key = `${phase}-${exerciseIndex}`;
-    setCompletedExercises(prev => 
-      prev.includes(key) 
-        ? prev.filter(item => item !== key)
-        : [...prev, key]
-    );
-  };
-
-  const isExerciseCompleted = (phase, exerciseIndex) => {
-    return completedExercises.includes(`${phase}-${exerciseIndex}`);
-  };
-
-  const getPhaseProgress = (phase) => {
-    const totalExercises = exercises[phase].exercises.length;
-    const completed = exercises[phase].exercises.filter((_, index) => 
-      isExerciseCompleted(phase, index)
-    ).length;
-    return Math.round((completed / totalExercises) * 100);
-  };
-
-  const isPhaseUnlocked = (phase) => {
-    if (phase === 1) return true;
-    const previousPhase = phase - 1;
-    return getPhaseProgress(previousPhase) >= 75; // 75% para desbloquear siguiente fase
-  };
-
-  const getDifficultyColor = (difficulty) => {
+  // Funciones auxiliares
+  const getDifficultyColor = (difficulty: string) => {
     const colors = {
-      'Intermedio': 'text-green-600 bg-green-100',
-      'Avanzado': 'text-orange-600 bg-orange-100',
-      'Experto': 'text-red-600 bg-red-100',
+      'Intermedio': 'text-blue-600 bg-blue-100',
+      'Avanzado': 'text-green-600 bg-green-100', 
+      'Experto': 'text-orange-600 bg-orange-100',
       'Virtuoso': 'text-purple-600 bg-purple-100',
-      'Demencial': 'text-red-700 bg-red-200 border border-red-400',
-      'Imposible': 'text-purple-700 bg-purple-200 border border-purple-400',
-      'Transcendental': 'text-yellow-700 bg-gradient-to-r from-yellow-100 to-orange-100 border border-yellow-400',
-      'Cerebral': 'text-blue-700 bg-blue-200 border border-blue-400 animate-pulse'
+      'Demencial': 'text-red-600 bg-red-100',
+      'Imposible': 'text-purple-800 bg-purple-200',
+      'Transcendental': 'text-yellow-800 bg-gradient-to-r from-yellow-100 to-orange-100'
     };
     return colors[difficulty] || 'text-gray-600 bg-gray-100';
   };
 
-  const formatTime = (seconds) => {
+  const getPhaseProgress = (phase: number): number => {
+    const exercises = exercisesByPhase[phase] || [];
+    const completed = exercises.filter(ex => completedExercises.has(ex.id)).length;
+    return exercises.length > 0 ? Math.round((completed / exercises.length) * 100) : 0;
+  };
+
+  const isPhaseUnlocked = (phase: number): boolean => {
+    if (phase === 1) return true;
+    const prevPhaseProgress = getPhaseProgress(phase - 1);
+    return prevPhaseProgress >= 75;
+  };
+
+  const startExercise = (exercise: Exercise) => {
+    setActiveExercise(exercise.id);
+    setExerciseTimer(0);
+    setIsTimerRunning(true);
+    
+    // Configurar secuencia y tempo automáticamente
+    if (exercise.sequenceIds.length > 0) {
+      setCurrentSequence(exercise.sequenceIds[0]);
+      const sequence = chordSequences[exercise.sequenceIds[0]];
+      const avgTempo = Math.round((sequence.tempoRange[0] + sequence.tempoRange[1]) / 2);
+      setTempo(avgTempo);
+    }
+  };
+
+  const completeExercise = (exerciseId: string) => {
+    setCompletedExercises(prev => new Set([...prev, exerciseId]));
+    setActiveExercise(null);
+    setIsTimerRunning(false);
+    setIsPlaying(false);
+  };
+
+  const formatTime = (seconds: number): string => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const ChordCard = ({ chord, scale, index, isActive, difficulty, position }) => (
-    <div className={`p-2 rounded-lg border-2 transition-all duration-300 ${
-      isActive 
-        ? 'border-blue-500 bg-blue-50 shadow-lg transform scale-105' 
-        : 'border-gray-200 bg-white hover:border-gray-300'
-    }`}>
-      <div className="text-center">
-        <div className="text-sm font-bold text-gray-800 mb-1 leading-tight break-words min-h-[2.5rem] flex items-center justify-center">
-          {chord}
-        </div>
-        <div className="text-xs text-gray-500 mb-1 truncate" title={scale}>{scale}</div>
-        <div className="text-xs text-blue-600 font-medium">Pos: {position}</div>
-        <div className="text-xs text-gray-400">#{index + 1}</div>
-      </div>
-    </div>
-  );
+  const currentExercises = exercisesByPhase[currentPhase] || [];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 p-6">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
+      <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">
-            🎸 Explorador de Acordes Avanzados
-          </h1>
-          <p className="text-gray-600 text-lg">
-            Domina tensiones complejas y escalas exóticas con ejercicios progresivos
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <Music className="text-indigo-600" size={40} />
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+              Explorador de Acordes y Escalas
+            </h1>
+          </div>
+          <p className="text-gray-600 max-w-2xl mx-auto">
+            Domina la armonía avanzada con ejercicios progresivos, desde construcción básica hasta técnicas transcendentales
           </p>
         </div>
 
         {/* Navegación de Fases */}
         <div className="flex justify-center mb-8">
-          <div className="flex bg-white rounded-xl shadow-lg p-2">
-            {[1, 2, 3, 4].map(phase => {
+          <div className="flex flex-wrap bg-white rounded-xl shadow-lg p-2 gap-1">
+            {[1, 2, 3, 4, 5, 6, 7, 8].map(phase => {
               const unlocked = isPhaseUnlocked(phase);
+              const getPhaseColor = (phase: number) => {
+                if (phase <= 4) return currentPhase === phase ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100';
+                if (phase === 5) return currentPhase === phase ? 'bg-red-600 text-white' : 'text-red-600 hover:bg-red-50';
+                if (phase === 6) return currentPhase === phase ? 'bg-purple-600 text-white' : 'text-purple-600 hover:bg-purple-50';
+                if (phase === 7) return currentPhase === phase ? 'bg-gradient-to-r from-yellow-500 to-orange-500 text-white' : 'text-orange-600 hover:bg-orange-50';
+                if (phase === 8) return currentPhase === phase ? 'bg-gradient-to-r from-pink-500 to-red-500 text-white' : 'text-pink-600 hover:bg-pink-50';
+                return 'text-gray-600';
+              };
+              
+              const getPhaseEmoji = (phase: number) => {
+                const emojis = { 1: '📗', 2: '📘', 3: '📕', 4: '📜', 5: '🔥', 6: '💀', 7: '🏆', 8: '🧠' };
+                return emojis[phase] || '';
+              };
+              
               return (
                 <button
                   key={phase}
                   onClick={() => unlocked && setCurrentPhase(phase)}
                   disabled={!unlocked}
-                  className={`px-6 py-3 rounded-lg font-semibold transition-all flex items-center gap-2 ${
-                    currentPhase === phase
-                      ? 'bg-blue-600 text-white shadow-md'
-                      : unlocked
-                        ? 'text-gray-600 hover:bg-gray-100'
-                        : 'text-gray-400 bg-gray-50 cursor-not-allowed'
-                  }`}
+                  className={`px-4 py-3 rounded-lg font-semibold transition-all flex flex-col items-center gap-1 min-w-[80px] ${
+                    unlocked
+                      ? getPhaseColor(phase) + (currentPhase === phase ? ' shadow-md' : '')
+                      : 'text-gray-400 bg-gray-50 cursor-not-allowed'
+                  } ${phase > 4 && unlocked ? 'animate-pulse' : ''}`}
+                  title={phase > 4 ? 'Fase Extrema - Solo para valientes' : ''}
                 >
-                  {unlocked ? <Unlock size={16} /> : <Lock size={16} />}
-                  Fase {phase}
-                  <div className="text-xs mt-1">
+                  <div className="flex items-center gap-1">
+                    {unlocked ? <Unlock size={14} /> : <Lock size={14} />}
+                    <span className="text-lg">{getPhaseEmoji(phase)}</span>
+                  </div>
+                  <div className="text-sm">Fase {phase}</div>
+                  <div className="text-xs opacity-75">
                     {getPhaseProgress(phase)}%
                   </div>
+                  {phase > 4 && unlocked && (
+                    <div className="text-xs font-bold">
+                      {phase === 5 && 'MENTAL'}
+                      {phase === 6 && 'IMPOSIBLE'}
+                      {phase === 7 && 'TRANSCENDENTAL'}
+                      {phase === 8 && 'CEREBRAL'}
+                    </div>
+                  )}
                 </button>
               );
             })}
           </div>
         </div>
 
-        {/* Ejercicio Activo */}
-        {activeExercise && (
-          <div className="mb-8 bg-gradient-to-r from-green-500 to-blue-500 text-white p-6 rounded-xl shadow-lg">
-            <div className="flex items-center justify-between mb-4">
+        {/* Advertencia para Fases Extremas */}
+        {currentPhase > 4 && (
+          <div className="mb-8 bg-gradient-to-r from-red-500 to-purple-600 text-white p-6 rounded-xl shadow-lg border-2 border-red-300">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="text-3xl">⚠️</div>
               <div>
                 <h3 className="text-xl font-bold">
-                  🎯 Ejercicio Activo: {exercises[activeExercise.phase].exercises[activeExercise.index].name}
+                  {currentPhase === 5 && '🧠 ZONA DE RETOS MENTALES EXTREMOS'}
+                  {currentPhase === 6 && '💀 ZONA DE TÉCNICA IMPOSIBLE'}
+                  {currentPhase === 7 && '🏆 ZONA DE TRANSCENDENCIA MUSICAL'}
+                  {currentPhase === 8 && '🧠 ZONA DE RETOS CEREBRALES PUROS'}
                 </h3>
-                <p className="opacity-90">
-                  {exercises[activeExercise.phase].exercises[activeExercise.index].instructions}
+                <p className="text-sm opacity-90">
+                  {currentPhase === 5 && 'Estos ejercicios desafían tu comprensión armónica y capacidad de procesamiento mental.'}
+                  {currentPhase === 6 && 'Combinaciones de técnicas que parecen físicamente imposibles. Procede bajo tu propio riesgo.'}
+                  {currentPhase === 7 && 'El nivel final. Maestría absoluta que trasciende la técnica pura.'}
+                  {currentPhase === 8 && 'Retos puramente cerebrales que requieren capacidad mental sobrehumana.'}
                 </p>
               </div>
-              <div className="text-right">
-                <div className="text-2xl font-bold">{formatTime(exerciseTimer)}</div>
-                <div className="text-sm opacity-75">
-                  Meta: {exercises[activeExercise.phase].exercises[activeExercise.index].duration}
-                </div>
-              </div>
             </div>
-            <div className="flex gap-3">
-              <button
-                onClick={stopExercise}
-                className="px-4 py-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg transition-colors"
-              >
-                Terminar Ejercicio
-              </button>
-              <button
-                onClick={() => toggleExercise(activeExercise.phase, activeExercise.index)}
-                className="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-lg transition-colors flex items-center gap-2"
-              >
-                <Check size={16} />
-                Marcar Completado
-              </button>
+            <div className="text-xs opacity-75">
+              {currentPhase === 5 && '⚡ Requiere: Memoria fotográfica, procesamiento mental extremo, resistencia psicológica'}
+              {currentPhase === 6 && '🔥 Requiere: Coordinación sobrehumana, técnicas simultáneas, preparación física extrema'}
+              {currentPhase === 7 && '✨ Requiere: Fusión total mente-cuerpo-música, creatividad transcendental, estado meditativo'}
+              {currentPhase === 8 && '🧠 Requiere: Capacidad mental sobrehumana, procesamiento multi-tarea extremo, resistencia cognitiva'}
             </div>
           </div>
         )}
@@ -626,82 +742,132 @@ const ChordExplorer = () => {
             <div className="bg-white rounded-xl shadow-lg p-6">
               <div className="flex justify-between items-start mb-4">
                 <h2 className="text-2xl font-bold text-gray-800">
-                  {exercises[currentPhase].title}
+                  Fase {currentPhase}: {
+                    currentPhase === 1 ? 'Fundamentos Sólidos' :
+                    currentPhase === 2 ? 'Exploración Sonora' :
+                    currentPhase === 3 ? 'Desarrollo Avanzado' :
+                    currentPhase === 4 ? 'Maestría Técnica' :
+                    currentPhase === 5 ? 'Retos Mentales' :
+                    currentPhase === 6 ? 'Técnica Extrema' :
+                    currentPhase === 7 ? 'Maestría Total' :
+                    'Retos Cerebrales'
+                  }
                 </h2>
-                <div className="text-right">
-                  <div className="text-sm text-gray-500">Progreso</div>
-                  <div className="text-2xl font-bold text-blue-600">
-                    {getPhaseProgress(currentPhase)}%
-                  </div>
+                <div className={`px-3 py-1 rounded-full text-sm font-medium ${
+                  currentPhase <= 4 ? 'text-blue-600 bg-blue-100' :
+                  currentPhase === 5 ? 'text-red-600 bg-red-100' :
+                  currentPhase === 6 ? 'text-purple-600 bg-purple-100' :
+                  currentPhase === 7 ? 'text-yellow-700 bg-yellow-100' :
+                  'text-pink-600 bg-pink-100'
+                }`}>
+                  {getPhaseProgress(currentPhase)}% Completado
                 </div>
               </div>
-              
-              <p className="text-gray-600 mb-6">{exercises[currentPhase].description}</p>
-              
+
+              {/* Lista de Ejercicios */}
               <div className="space-y-4">
-                {exercises[currentPhase].exercises.map((exercise, index) => {
-                  const isActive = activeExercise?.phase === currentPhase && activeExercise?.index === index;
-                  const isCompleted = isExerciseCompleted(currentPhase, index);
-                  
-                  return (
-                    <div 
-                      key={index}
-                      className={`p-4 rounded-lg border-2 transition-all ${
-                        isActive
-                          ? 'border-green-500 bg-green-50 shadow-lg'
-                          : isCompleted
-                            ? 'border-green-300 bg-green-50'
-                            : 'border-gray-200 bg-gray-50'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <button
-                            onClick={() => toggleExercise(currentPhase, index)}
-                            className={`p-2 rounded-full ${
-                              isCompleted
-                                ? 'bg-green-500 text-white'
-                                : 'bg-gray-200 text-gray-500'
-                            } transition-colors`}
-                          >
-                            <Check size={16} />
-                          </button>
-                          <div className="flex-1">
-                            <h3 className="font-semibold text-gray-800">{exercise.name}</h3>
-                            <p className="text-sm text-gray-500 mb-1">Duración: {exercise.duration}</p>
-                            <p className="text-xs text-blue-600">{exercise.instructions}</p>
+                {currentExercises.map((exercise) => (
+                  <div key={exercise.id} className={`border rounded-lg p-4 transition-all ${
+                    activeExercise === exercise.id ? 'border-blue-500 bg-blue-50' : 'border-gray-200'
+                  } ${completedExercises.has(exercise.id) ? 'bg-green-50 border-green-300' : ''}`}>
+                    
+                    <div className="flex justify-between items-start mb-3">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <h3 className="font-bold text-lg">{exercise.name}</h3>
+                          <div className={`px-2 py-1 rounded-full text-xs font-medium ${getDifficultyColor(exercise.difficulty)}`}>
+                            {exercise.difficulty}
                           </div>
+                          {completedExercises.has(exercise.id) && (
+                            <div className="text-green-600 text-sm">✅ Completado</div>
+                          )}
                         </div>
-                        <div className="flex items-center gap-2">
-                          {isCompleted && <Star className="text-yellow-500 fill-current" size={20} />}
+                        <p className="text-gray-600 text-sm mb-2">{exercise.description}</p>
+                        
+                        {/* Técnicas */}
+                        <div className="flex flex-wrap gap-1 mb-2">
+                          {exercise.techniques.map((tech, index) => (
+                            <span key={index} className="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">
+                              {tech}
+                            </span>
+                          ))}
+                        </div>
+
+                        {/* Retos Mentales */}
+                        {exercise.mentalChallenges && (
+                          <div className="mb-2">
+                            <div className="text-xs font-medium text-purple-700 mb-1">🧠 Retos Mentales:</div>
+                            <div className="flex flex-wrap gap-1">
+                              {exercise.mentalChallenges.map((challenge, index) => (
+                                <span key={index} className="px-2 py-1 bg-purple-100 text-purple-700 rounded text-xs">
+                                  {challenge}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Advertencias */}
+                        {exercise.warnings && (
+                          <div className="p-2 bg-red-50 border border-red-200 rounded text-xs text-red-700 mb-2">
+                            <div className="font-medium mb-1">⚠️ Advertencias:</div>
+                            <ul className="list-disc list-inside space-y-1">
+                              {exercise.warnings.map((warning, index) => (
+                                <li key={index}>{warning}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+                      
+                      <div className="flex flex-col gap-2 ml-4">
+                        <div className="text-right text-sm text-gray-500">
+                          <Clock size={14} className="inline mr-1" />
+                          {exercise.duration} min
+                        </div>
+                        
+                        {activeExercise === exercise.id ? (
+                          <div className="text-center">
+                            <div className="text-lg font-bold text-blue-600 mb-2">
+                              {formatTime(exerciseTimer)}
+                            </div>
+                            <button
+                              onClick={() => completeExercise(exercise.id)}
+                              className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm"
+                            >
+                              Completar
+                            </button>
+                          </div>
+                        ) : (
                           <button
-                            onClick={() => startExercise(currentPhase, index)}
-                            disabled={isActive}
-                            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                              isActive
-                                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                            onClick={() => startExercise(exercise)}
+                            disabled={completedExercises.has(exercise.id)}
+                            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                              completedExercises.has(exercise.id)
+                                ? 'bg-green-100 text-green-600 cursor-not-allowed'
                                 : 'bg-blue-600 hover:bg-blue-700 text-white'
                             }`}
                           >
-                            {isActive ? 'En Curso' : 'Iniciar'}
+                            {completedExercises.has(exercise.id) ? 'Completado' : 'Iniciar'}
                           </button>
-                        </div>
+                        )}
                       </div>
                     </div>
-                  );
-                })}
-              </div>
 
-              {/* Información de Desbloqueo */}
-              {currentPhase < 4 && getPhaseProgress(currentPhase) < 75 && (
-                <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                  <h4 className="font-semibold text-yellow-800 mb-2">🔓 Desbloquear Siguiente Fase</h4>
-                  <p className="text-sm text-yellow-700">
-                    Completa al menos 75% de los ejercicios de esta fase para desbloquear la Fase {currentPhase + 1}.
-                    Progreso actual: {getPhaseProgress(currentPhase)}%
-                  </p>
-                </div>
-              )}
+                    {/* Instrucciones del ejercicio */}
+                    {activeExercise === exercise.id && (
+                      <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                        <h4 className="font-semibold text-blue-800 mb-2">📋 Instrucciones:</h4>
+                        <ol className="list-decimal list-inside space-y-1 text-sm text-blue-700">
+                          {exercise.instructions.map((instruction, index) => (
+                            <li key={index}>{instruction}</li>
+                          ))}
+                        </ol>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
 
             {/* Secuencias de Acordes - Movido al área principal */}
@@ -741,6 +907,10 @@ const ChordExplorer = () => {
                     {chordSequences[currentSequence].phase === 2 && "Exploración sonora y colores armónicos"}
                     {chordSequences[currentSequence].phase === 3 && "Desarrollo de fluidez y velocidad"}
                     {chordSequences[currentSequence].phase === 4 && "Aplicación musical avanzada"}
+                    {chordSequences[currentSequence].phase === 5 && "Retos mentales con modulación constante"}
+                    {chordSequences[currentSequence].phase === 6 && "Técnicas imposibles combinadas"}
+                    {chordSequences[currentSequence].phase === 7 && "Transcendencia musical total"}
+                    {chordSequences[currentSequence].phase === 8 && "Retos cerebrales puros"}
                   </div>
                 </div>
                 
@@ -750,35 +920,25 @@ const ChordExplorer = () => {
                     🎸 <strong>Nivel Virtuoso:</strong> Requiere técnicas avanzadas como tapping, wide stretches y hybrid picking. ¡Calienta bien antes de intentar!
                   </div>
                 )}
-                {chordSequences[currentSequence].difficulty === 'Experto' && (
-                  <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700 mt-2">
-                    🔥 <strong>Nivel Experto:</strong> Voicings complejos con saltos de posición. Usa todas las técnicas de digitación disponibles.
-                  </div>
-                )}
-                {chordSequences[currentSequence].difficulty === 'Cerebral' && (
-                  <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-700 mt-2">
-                    🧠 <strong>Nivel Cerebral:</strong> Requiere procesamiento mental múltiple. Análisis teórico en tiempo real.
-                  </div>
-                )}
                 {chordSequences[currentSequence].difficulty === 'Demencial' && (
-                  <div className="p-3 bg-red-100 border border-red-300 rounded-lg text-sm text-red-800 mt-2">
-                    🔥 <strong>Nivel Demencial:</strong> Modulaciones extremas. Requiere memoria fotográfica y procesamiento mental sobrehumano.
+                  <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700 mt-2">
+                    🧠 <strong>Nivel Demencial:</strong> Retos mentales extremos que requieren procesamiento cognitivo sobrehumano. ¡Prepara tu mente!
                   </div>
                 )}
                 {chordSequences[currentSequence].difficulty === 'Imposible' && (
-                  <div className="p-3 bg-purple-100 border border-purple-300 rounded-lg text-sm text-purple-800 mt-2">
-                    💀 <strong>Nivel Imposible:</strong> Técnicas que desafían las leyes de la física. Solo para los más valientes.
+                  <div className="p-3 bg-purple-50 border border-purple-200 rounded-lg text-sm text-purple-700 mt-2">
+                    💀 <strong>Nivel Imposible:</strong> Técnicas que desafían las leyes de la física. Solo para superhéroes de la guitarra.
                   </div>
                 )}
                 {chordSequences[currentSequence].difficulty === 'Transcendental' && (
-                  <div className="p-3 bg-gradient-to-r from-yellow-100 to-orange-100 border border-yellow-300 rounded-lg text-sm text-yellow-800 mt-2">
-                    🏆 <strong>Nivel Transcendental:</strong> Más allá de la técnica. Fusión total entre mente, cuerpo y música.
+                  <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-sm text-yellow-700 mt-2">
+                    🏆 <strong>Nivel Transcendental:</strong> Más allá de la técnica. Fusión total entre músico y música.
                   </div>
                 )}
               </div>
               
-              {/* Grid de Acordes - Más grande en el área principal */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 mb-6 max-h-96 overflow-y-auto">
+              {/* Grid de Acordes - Mejorado para acordes largos */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 mb-6 max-h-80 overflow-y-auto">
                 {chordSequences[currentSequence].chords.map((chord, index) => (
                   <div key={index} className="relative group">
                     <ChordCard
@@ -789,17 +949,18 @@ const ChordExplorer = () => {
                       isActive={false}
                       difficulty={chordSequences[currentSequence].difficulty}
                     />
-                    {/* Tooltip con información de la escala */}
-                    <div className="absolute z-20 invisible group-hover:visible bg-gray-900 text-white p-3 rounded-lg shadow-xl -top-2 left-full ml-2 w-72 text-xs border border-gray-700">
+                    {/* Tooltip mejorado con información de la escala */}
+                    <div className="absolute z-10 invisible group-hover:visible bg-gray-800 text-white p-3 rounded-lg shadow-lg -top-2 left-full ml-2 w-64 text-xs">
                       {(() => {
                         const scaleInfo = getScaleInfo(chordSequences[currentSequence].scales[index]);
                         return scaleInfo ? (
                           <div>
-                            <div className="font-bold text-yellow-300 mb-2">{chord}</div>
-                            <div className="font-semibold mb-1 text-blue-300">{scaleInfo.name}</div>
-                            <div className="mb-1 font-mono text-green-300">Intervalos: {scaleInfo.intervals}</div>
+                            <div className="font-semibold mb-1">{scaleInfo.name}</div>
+                            <div className="mb-1">Intervalos: {scaleInfo.intervals}</div>
                             <div className="text-gray-300 mb-2">{scaleInfo.characteristics}</div>
-                            <div className="text-purple-300 text-xs">Posición: {position}</div>
+                            <div className="text-yellow-300 text-xs">
+                              Emociones: {scaleInfo.emotions}
+                            </div>
                           </div>
                         ) : (
                           <div>Información no disponible</div>
@@ -838,6 +999,51 @@ const ChordExplorer = () => {
                 </button>
               </div>
             </div>
+            
+            {/* Progreso General */}
+            <div className="bg-white rounded-xl shadow-lg p-6">
+              <h3 className="text-xl font-bold text-gray-800 mb-4">Progreso General</h3>
+              
+              <div className="space-y-3">
+                {[1, 2, 3, 4, 5, 6, 7, 8].map(phase => {
+                  const progress = getPhaseProgress(phase);
+                  const unlocked = isPhaseUnlocked(phase);
+                  
+                  return (
+                    <div key={phase} className={`p-3 rounded-lg ${unlocked ? 'bg-gray-50' : 'bg-gray-100 opacity-50'}`}>
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="font-medium">
+                          {unlocked ? <Unlock size={16} className="inline mr-2" /> : <Lock size={16} className="inline mr-2" />}
+                          Fase {phase}: {
+                            phase === 1 ? 'Fundamentos' :
+                            phase === 2 ? 'Exploración' :
+                            phase === 3 ? 'Desarrollo' :
+                            phase === 4 ? 'Maestría' :
+                            phase === 5 ? 'Retos Mentales' :
+                            phase === 6 ? 'Técnica Extrema' :
+                            phase === 7 ? 'Transcendencia' :
+                            'Retos Cerebrales'
+                          }
+                        </span>
+                        <span className="text-sm font-bold">{progress}%</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div 
+                          className={`h-2 rounded-full transition-all duration-300 ${
+                            phase <= 4 ? 'bg-blue-500' :
+                            phase === 5 ? 'bg-red-500' :
+                            phase === 6 ? 'bg-purple-500' :
+                            phase === 7 ? 'bg-gradient-to-r from-yellow-500 to-orange-500' :
+                            'bg-gradient-to-r from-pink-500 to-red-500'
+                          }`}
+                          style={{ width: `${progress}%` }}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
           </div>
 
           {/* Panel Lateral */}
@@ -852,189 +1058,6 @@ const ChordExplorer = () => {
               isPlaying={isPlaying}
               setIsPlaying={setIsPlaying}
             />
-            
-            {/* Progreso General */}
-            <div className="bg-white rounded-xl shadow-lg p-6 lg:col-span-2">
-              <h3 className="text-xl font-bold text-gray-800 mb-4">Progreso General</h3>
-              
-              <div className="space-y-3">
-                {[1, 2, 3, 4].map(phase => {
-                  const progress = getPhaseProgress(phase);
-                  const unlocked = isPhaseUnlocked(phase);
-                  return (
-                    <div key={phase} className={unlocked ? '' : 'opacity-50'}>
-                      <div className="flex justify-between text-sm mb-1">
-                        <span className="flex items-center gap-2">
-                          {unlocked ? <Unlock size={14} /> : <Lock size={14} />}
-                          Fase {phase}
-                        </span>
-                        <span>{progress}%</span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div 
-                          className={`h-2 rounded-full transition-all duration-300 ${
-                            unlocked 
-                              ? 'bg-gradient-to-r from-blue-500 to-purple-500'
-                              : 'bg-gray-400'
-                          }`}
-                          style={{width: `${progress}%`}}
-                        ></div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-              
-              <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-                <div className="text-sm text-blue-700">
-                  Ejercicios completados: {completedExercises.length}
-                </div>
-                <div className="text-xs text-blue-600 mt-1">
-                  ¡Completa 75% de cada fase para desbloquear la siguiente!
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Tips según la fase */}
-        <div className="mt-8 bg-white rounded-xl shadow-lg p-6">
-          <h3 className="text-xl font-bold text-gray-800 mb-4">💡 Consejos para la Fase {currentPhase}</h3>
-          <div className="grid md:grid-cols-2 gap-4 text-sm text-gray-600 mb-6">
-            {currentPhase === 1 && (
-              <>
-                <div>• Toca cada acorde en 3 posiciones diferentes del mástil</div>
-                <div>• Escucha el cambio de color que aporta cada tensión</div>
-                <div>• Mantén tempo lento (60-80 BPM) para apreciar cada sonido</div>
-                <div>• Practica las inversiones con movimientos fluidos</div>
-              </>
-            )}
-            {currentPhase === 2 && (
-              <>
-                <div>• Deja resonar cada acorde para escuchar su carácter</div>
-                <div>• Pregúntate qué emociones evoca cada escala</div>
-                <div>• Busca el sabor étnico en escalas húngaras y árabes</div>
-                <div>• Compara directamente acordes de diferentes escalas</div>
-              </>
-            )}
-            {currentPhase === 3 && (
-              <>
-                <div>• No pares aunque te equivoques - mantén el flujo</div>
-                <div>• Busca la posición más cercana para el siguiente acorde</div>
-                <div>• Graba tu progreso para autoevaluarte</div>
-                <div>• Incrementa gradualmente el tempo (90-150 BPM)</div>
-              </>
-            )}
-            {currentPhase === 4 && (
-              <>
-                <div>• Reharmoniza canciones que ya conozcas</div>
-                <div>• Experimenta con diferentes contextos armónicos</div>
-                <div>• Crea tus propias progresiones mezclando escalas</div>
-                <div>• Domina técnicas virtuosas (110-200 BPM)</div>
-              </>
-            )}
-            {currentPhase === 5 && (
-              <>
-                <div className="text-red-600 font-bold">🧠 • Memoriza las modulaciones antes de tocar</div>
-                <div className="text-red-600 font-bold">🎯 • Identifica el centro tonal en tiempo real</div>
-                <div className="text-red-600 font-bold">⚡ • Cambia de escala mental cada 2 acordes</div>
-                <div className="text-red-600 font-bold">🔄 • Practica modulaciones ciegas (sin mirar)</div>
-              </>
-            )}
-            {currentPhase === 6 && (
-              <>
-                <div className="text-purple-600 font-bold">🤹 • Combina 3+ técnicas simultáneamente</div>
-                <div className="text-purple-600 font-bold">🎸 • Tapping + hybrid picking + bends</div>
-                <div className="text-purple-600 font-bold">👁️ • Ejecución completamente ciega</div>
-                <div className="text-purple-600 font-bold">🧘 • Mantén la calma mental bajo presión extrema</div>
-              </>
-            )}
-            {currentPhase === 7 && (
-              <>
-                <div className="text-yellow-600 font-bold">🏆 • Trasciende la técnica - busca la expresión pura</div>
-                <div className="text-yellow-600 font-bold">🧠 • Enseña mientras tocas - dominio total</div>
-                <div className="text-yellow-600 font-bold">🎵 • Improvisa sobre estructuras imposibles</div>
-                <div className="text-yellow-600 font-bold">🌟 • Alcanza el estado de flow absoluto</div>
-              </>
-            )}
-          </div>
-
-          {/* Secuencias de la Fase Actual */}
-          <div className="border-t pt-4">
-            <h4 className="font-semibold text-gray-800 mb-3">🎼 Secuencias de esta Fase</h4>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {phaseSequences[currentPhase]?.map(seqIndex => {
-                const seq = chordSequences[seqIndex];
-                return (
-                  <div 
-                    key={seqIndex}
-                    className={`p-3 border rounded-lg cursor-pointer transition-all ${
-                      currentSequence === seqIndex
-                        ? seq.phase >= 5
-                          ? 'border-red-500 bg-red-50'
-                          : 'border-blue-500 bg-blue-50'
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}
-                    onClick={() => setCurrentSequence(seqIndex)}
-                  >
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="font-medium text-gray-800">
-                        {seq.name}
-                        {seq.phase >= 5 && <span className="ml-1 text-red-500">🔥</span>}
-                        {seq.phase >= 6 && <span className="ml-1">💀</span>}
-                        {seq.phase === 7 && <span className="ml-1">🏆</span>}
-                      </span>
-                      <span className={`px-2 py-1 rounded text-xs ${getDifficultyColor(seq.difficulty)}`}>
-                        {seq.difficulty}
-                      </span>
-                    </div>
-                    <div className="text-xs text-gray-600">
-                      Tempo: {seq.tempoRange[0]}-{seq.tempoRange[1]} BPM
-                    </div>
-                    {seq.specialTechnique && (
-                      <div className="text-xs text-purple-600 mt-1 font-medium">
-                        🎸 {seq.specialTechnique}
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Guía de Dificultad */}
-          <div className="border-t pt-4 mt-4">
-            <h4 className="font-semibold text-gray-800 mb-3">🎯 Sistema de Progresión</h4>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 text-xs">
-              <div className="p-3 bg-green-50 border border-green-200 rounded">
-                <div className="font-semibold text-green-700 mb-1">📗 Fase 1</div>
-                <div className="text-green-600">Construcción gradual. Tensiones básicas (9, 11, 13). Tempo 60-90 BPM.</div>
-              </div>
-              <div className="p-3 bg-orange-50 border border-orange-200 rounded">
-                <div className="font-semibold text-orange-700 mb-1">📘 Fase 2</div>
-                <div className="text-orange-600">Exploración sonora. Drop voicings, colores armónicos. Tempo 70-110 BPM.</div>
-              </div>
-              <div className="p-3 bg-red-50 border border-red-200 rounded">
-                <div className="font-semibold text-red-700 mb-1">📕 Fase 3</div>
-                <div className="text-red-600">Fluidez y velocidad. Técnicas avanzadas, hybrid picking. Tempo 90-150 BPM.</div>
-              </div>
-              <div className="p-3 bg-purple-50 border border-purple-200 rounded">
-                <div className="font-semibold text-purple-700 mb-1">📜 Fase 4</div>
-                <div className="text-purple-600">Aplicación musical. Técnicas virtuosas, tapping. Tempo 110-200 BPM.</div>
-              </div>
-              <div className="p-3 bg-red-100 border-2 border-red-300 rounded">
-                <div className="font-semibold text-red-800 mb-1">🔥 Fase 5</div>
-                <div className="text-red-700">RETOS MENTALES. Modulaciones extremas. Tempo 150-240 BPM.</div>
-              </div>
-              <div className="p-3 bg-purple-100 border-2 border-purple-300 rounded">
-                <div className="font-semibold text-purple-800 mb-1">💀 Fase 6</div>
-                <div className="text-purple-700">TÉCNICA IMPOSIBLE. Combinaciones extremas. Tempo 180-280 BPM.</div>
-              </div>
-              <div className="p-3 bg-gradient-to-r from-yellow-100 to-gold-100 border-2 border-yellow-400 rounded">
-                <div className="font-semibold text-yellow-800 mb-1">🏆 Fase 7</div>
-                <div className="text-yellow-700">TRANSCENDENCIA. Maestría absoluta. Tempo 220-300 BPM.</div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
