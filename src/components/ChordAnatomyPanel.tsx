@@ -266,7 +266,7 @@ const ChordAnatomyPanel: React.FC<ChordAnatomyPanelProps> = ({ selectedChord }) 
 
   if (!selectedChord) {
     return (
-      <div className="bg-white rounded-xl shadow-lg p-6 h-fit">
+      <div className="bg-white rounded-xl shadow-lg p-6 h-fit min-h-[400px]">
         <div className="text-center text-gray-500">
           <Guitar size={48} className="mx-auto mb-4 opacity-50" />
           <h3 className="text-lg font-semibold mb-2">Anatomía de Acordes</h3>
@@ -309,7 +309,7 @@ const ChordAnatomyPanel: React.FC<ChordAnatomyPanelProps> = ({ selectedChord }) 
   ];
 
   return (
-    <div className="bg-white rounded-xl shadow-lg overflow-hidden h-fit">
+    <div className="bg-white rounded-xl shadow-lg overflow-hidden h-fit min-h-[500px]">
       {/* Header */}
       <div className="p-4 bg-gradient-to-r from-indigo-500 to-purple-600 text-white">
         <div className="flex items-center justify-between mb-2">
@@ -327,37 +327,37 @@ const ChordAnatomyPanel: React.FC<ChordAnatomyPanelProps> = ({ selectedChord }) 
       </div>
 
       {/* Tabs */}
-      <div className="flex border-b">
+      <div className="flex border-b bg-gray-50">
         {tabs.map(tab => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id as any)}
-            className={`flex-1 flex items-center justify-center gap-1 py-3 text-sm font-medium transition-colors ${
+            className={`flex-1 flex items-center justify-center gap-1 py-2 px-1 text-xs font-medium transition-colors ${
               activeTab === tab.id
                 ? 'bg-indigo-50 text-indigo-600 border-b-2 border-indigo-600'
                 : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50'
             }`}
           >
-            <tab.icon size={16} />
+            <tab.icon size={14} />
             {tab.label}
           </button>
         ))}
       </div>
 
       {/* Content */}
-      <div className="p-4 max-h-96 overflow-y-auto">
+      <div className="p-3 max-h-[400px] overflow-y-auto">
         {activeTab === 'notes' && (
-          <div className="space-y-4">
+          <div className="space-y-3">
             {/* Notas del Acorde */}
-            <div className="p-3 bg-blue-50 rounded-lg">
+            <div className="p-2 bg-blue-50 rounded-lg">
               <h4 className="font-semibold text-blue-800 mb-2 flex items-center gap-2">
-                <Music size={16} />
+                <Music size={14} />
                 Notas del Acorde
               </h4>
-              <div className="flex flex-wrap gap-2 mb-3">
+              <div className="flex flex-wrap gap-1 mb-2">
                 {chordInfo.notes.map((note, index) => (
                   <div key={index} className="flex flex-col items-center">
-                    <span className="px-3 py-1 bg-blue-200 text-blue-800 rounded-full font-mono font-bold">
+                    <span className="px-2 py-1 bg-blue-200 text-blue-800 rounded-full font-mono font-bold text-sm">
                       {note}
                     </span>
                     <span className="text-xs text-blue-600 mt-1">
@@ -369,22 +369,22 @@ const ChordAnatomyPanel: React.FC<ChordAnatomyPanelProps> = ({ selectedChord }) 
             </div>
 
             {/* Diagrama de Trastes */}
-            <div className="p-3 bg-gray-50 rounded-lg">
+            <div className="p-2 bg-gray-50 rounded-lg">
               <h4 className="font-semibold text-gray-800 mb-2">🎸 Diagrama de Trastes</h4>
-              <div className="text-xs text-gray-600 mb-2">Cuerdas: E A D G B E (de grave a agudo)</div>
-              <div className="flex gap-1 font-mono text-sm justify-center">
+              <div className="text-xs text-gray-600 mb-2 text-center">E A D G B E (grave → agudo)</div>
+              <div className="flex gap-1 font-mono text-xs justify-center overflow-x-auto pb-2">
                 {chordInfo.fretDiagram.map((fret, index) => (
                   <div key={index} className="flex flex-col items-center">
-                    <div className={`w-10 h-10 border-2 rounded flex items-center justify-center font-bold ${
+                    <div className={`w-8 h-8 border-2 rounded flex items-center justify-center font-bold text-xs ${
                       fret === 0 ? 'border-red-300 bg-red-50 text-red-600' : 'border-blue-300 bg-blue-50 text-blue-700'
                     }`}>
                       {fret === 0 ? 'X' : fret}
                     </div>
-                    <div className="text-xs text-gray-500 mt-1">{6-index}ª</div>
+                    <div className="text-xs text-gray-500 mt-1">{6-index}</div>
                   </div>
                 ))}
               </div>
-              <div className="text-xs text-gray-500 mt-2 text-center">
+              <div className="text-xs text-gray-500 mt-1 text-center">
                 X = No tocar • Números = Traste a presionar
               </div>
             </div>
@@ -392,17 +392,17 @@ const ChordAnatomyPanel: React.FC<ChordAnatomyPanelProps> = ({ selectedChord }) 
         )}
 
         {activeTab === 'technique' && (
-          <div className="space-y-4">
+          <div className="space-y-3">
             {/* Digitación Mano Izquierda */}
-            <div className="p-3 bg-green-50 rounded-lg">
+            <div className="p-2 bg-green-50 rounded-lg">
               <h4 className="font-semibold text-green-800 mb-2 flex items-center gap-2">
-                <Hand size={16} />
+                <Hand size={14} />
                 Digitación Mano Izquierda
               </h4>
-              <ul className="space-y-2 text-sm">
+              <ul className="space-y-1 text-xs">
                 {chordInfo.fingering.map((finger, index) => (
                   <li key={index} className="flex items-start gap-2">
-                    <span className="w-2 h-2 bg-green-400 rounded-full mt-2"></span>
+                    <span className="w-1.5 h-1.5 bg-green-400 rounded-full mt-1.5"></span>
                     <span className="text-green-700">{finger}</span>
                   </li>
                 ))}
@@ -410,21 +410,21 @@ const ChordAnatomyPanel: React.FC<ChordAnatomyPanelProps> = ({ selectedChord }) 
             </div>
 
             {/* Técnica Mano Derecha */}
-            <div className="p-3 bg-purple-50 rounded-lg">
+            <div className="p-2 bg-purple-50 rounded-lg">
               <h4 className="font-semibold text-purple-800 mb-2 flex items-center gap-2">
-                <Zap size={16} />
+                <Zap size={14} />
                 Técnica Mano Derecha
               </h4>
-              <p className="text-sm text-purple-700">{chordInfo.rightHandTechnique}</p>
+              <p className="text-xs text-purple-700">{chordInfo.rightHandTechnique}</p>
             </div>
 
             {/* Consejos Técnicos */}
-            <div className="p-3 bg-yellow-50 rounded-lg">
+            <div className="p-2 bg-yellow-50 rounded-lg">
               <h4 className="font-semibold text-yellow-800 mb-2 flex items-center gap-2">
-                <Target size={16} />
+                <Target size={14} />
                 Consejos Técnicos
               </h4>
-              <ul className="space-y-1 text-sm">
+              <ul className="space-y-1 text-xs">
                 {chordInfo.leftHandTips.map((tip, index) => (
                   <li key={index} className="flex items-start gap-2">
                     <span className="text-yellow-500 mt-1">💡</span>
@@ -435,12 +435,12 @@ const ChordAnatomyPanel: React.FC<ChordAnatomyPanelProps> = ({ selectedChord }) 
             </div>
 
             {/* Errores Comunes */}
-            <div className="p-3 bg-red-50 rounded-lg">
+            <div className="p-2 bg-red-50 rounded-lg">
               <h4 className="font-semibold text-red-800 mb-2 flex items-center gap-2">
-                <AlertTriangle size={16} />
+                <AlertTriangle size={14} />
                 Errores Comunes
               </h4>
-              <ul className="space-y-1 text-sm">
+              <ul className="space-y-1 text-xs">
                 {chordInfo.commonMistakes.map((mistake, index) => (
                   <li key={index} className="flex items-start gap-2">
                     <span className="text-red-500 mt-1">⚠️</span>
@@ -453,26 +453,26 @@ const ChordAnatomyPanel: React.FC<ChordAnatomyPanelProps> = ({ selectedChord }) 
         )}
 
         {activeTab === 'theory' && (
-          <div className="space-y-4">
+          <div className="space-y-3">
             {/* Función Musical */}
-            <div className="p-3 bg-indigo-50 rounded-lg">
+            <div className="p-2 bg-indigo-50 rounded-lg">
               <h4 className="font-semibold text-indigo-800 mb-2 flex items-center gap-2">
-                <Brain size={16} />
+                <Brain size={14} />
                 Función Musical
               </h4>
-              <p className="text-sm text-indigo-700">{chordInfo.musicalFunction}</p>
+              <p className="text-xs text-indigo-700">{chordInfo.musicalFunction}</p>
             </div>
 
             {/* Tipo de Voicing */}
-            <div className="p-3 bg-teal-50 rounded-lg">
+            <div className="p-2 bg-teal-50 rounded-lg">
               <h4 className="font-semibold text-teal-800 mb-2">🎼 Tipo de Voicing</h4>
-              <p className="text-sm text-teal-700">{chordInfo.voicingType}</p>
+              <p className="text-xs text-teal-700">{chordInfo.voicingType}</p>
             </div>
 
             {/* Voicings Alternativos */}
-            <div className="p-3 bg-orange-50 rounded-lg">
+            <div className="p-2 bg-orange-50 rounded-lg">
               <h4 className="font-semibold text-orange-800 mb-2">🔄 Voicings Alternativos</h4>
-              <ul className="space-y-1 text-sm">
+              <ul className="space-y-1 text-xs">
                 {chordInfo.alternativeVoicings.map((voicing, index) => (
                   <li key={index} className="flex items-start gap-2">
                     <span className="text-orange-500 mt-1">•</span>
@@ -483,9 +483,9 @@ const ChordAnatomyPanel: React.FC<ChordAnatomyPanelProps> = ({ selectedChord }) 
             </div>
 
             {/* Contexto en la Escala */}
-            <div className="p-3 bg-pink-50 rounded-lg">
+            <div className="p-2 bg-pink-50 rounded-lg">
               <h4 className="font-semibold text-pink-800 mb-2">📊 Contexto en {selectedChord.scale}</h4>
-              <p className="text-sm text-pink-700">
+              <p className="text-xs text-pink-700">
                 {selectedChord.scale === 'Mayor' && 'Acorde diatónico de la escala mayor. Función tonal clara.'}
                 {selectedChord.scale === 'Menor' && 'Acorde de la escala menor natural. Sonoridad melancólica.'}
                 {selectedChord.scale === 'Dórico' && 'Modo dórico - menor con 6ta mayor. Color folk y celta.'}
@@ -502,20 +502,20 @@ const ChordAnatomyPanel: React.FC<ChordAnatomyPanelProps> = ({ selectedChord }) 
         )}
 
         {activeTab === 'practice' && (
-          <div className="space-y-4">
+          <div className="space-y-3">
             {/* Notas de Práctica */}
-            <div className="p-3 bg-gray-50 rounded-lg border-l-4 border-indigo-500">
+            <div className="p-2 bg-gray-50 rounded-lg border-l-4 border-indigo-500">
               <h4 className="font-semibold text-gray-800 mb-2 flex items-center gap-2">
-                <Target size={16} />
+                <Target size={14} />
                 Notas de Práctica
               </h4>
-              <p className="text-sm text-gray-700">{chordInfo.practiceNotes}</p>
+              <p className="text-xs text-gray-700">{chordInfo.practiceNotes}</p>
             </div>
 
             {/* Ejercicios Específicos */}
-            <div className="p-3 bg-blue-50 rounded-lg">
+            <div className="p-2 bg-blue-50 rounded-lg">
               <h4 className="font-semibold text-blue-800 mb-2">🎯 Ejercicios Específicos</h4>
-              <ul className="space-y-2 text-sm text-blue-700">
+              <ul className="space-y-1 text-xs text-blue-700">
                 <li className="flex items-start gap-2">
                   <span className="text-blue-500 mt-1">1.</span>
                   <span>Toca cada nota del acorde por separado, escucha su función</span>
@@ -536,32 +536,32 @@ const ChordAnatomyPanel: React.FC<ChordAnatomyPanelProps> = ({ selectedChord }) 
             </div>
 
             {/* Progresión de Dificultad */}
-            <div className="p-3 bg-green-50 rounded-lg">
+            <div className="p-2 bg-green-50 rounded-lg">
               <h4 className="font-semibold text-green-800 mb-2">📈 Progresión de Dificultad</h4>
-              <div className="space-y-2 text-sm">
+              <div className="space-y-1 text-xs">
                 <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 bg-green-400 rounded-full"></div>
+                  <div className="w-2 h-2 bg-green-400 rounded-full"></div>
                   <span className="text-green-700">Nivel 1: Acorde estático, tempo lento</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
+                  <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
                   <span className="text-yellow-700">Nivel 2: Transiciones suaves a otros acordes</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 bg-orange-400 rounded-full"></div>
+                  <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
                   <span className="text-orange-700">Nivel 3: Tempo medio con metrónomo</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 bg-red-400 rounded-full"></div>
+                  <div className="w-2 h-2 bg-red-400 rounded-full"></div>
                   <span className="text-red-700">Nivel 4: Tempo rápido, improvisación</span>
                 </div>
               </div>
             </div>
 
             {/* Tiempo de Práctica Recomendado */}
-            <div className="p-3 bg-purple-50 rounded-lg">
+            <div className="p-2 bg-purple-50 rounded-lg">
               <h4 className="font-semibold text-purple-800 mb-2">⏰ Tiempo de Práctica</h4>
-              <div className="text-sm text-purple-700">
+              <div className="text-xs text-purple-700">
                 <p className="mb-2"><strong>Principiante:</strong> 5-10 minutos diarios</p>
                 <p className="mb-2"><strong>Intermedio:</strong> 3-5 minutos por sesión</p>
                 <p><strong>Avanzado:</strong> Integración en progresiones complejas</p>
