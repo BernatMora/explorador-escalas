@@ -476,17 +476,80 @@ const ChordExplorer = () => {
 
         {/* Navegación de Fases */}
         <div className="flex justify-center mb-8">
-          <div className="flex bg-white rounded-xl shadow-lg p-2">
-            {[1, 2, 3, 4].map(phase => {
+          <div className="flex flex-wrap bg-white rounded-xl shadow-lg p-2 gap-1">
+            {[1, 2, 3, 4, 5, 6, 7].map(phase => {
               const unlocked = isPhaseUnlocked(phase);
+              const getPhaseColor = (phase) => {
+                if (phase <= 4) return currentPhase === phase ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100';
+                if (phase === 5) return currentPhase === phase ? 'bg-red-600 text-white' : 'text-red-600 hover:bg-red-50';
+                if (phase === 6) return currentPhase === phase ? 'bg-purple-600 text-white' : 'text-purple-600 hover:bg-purple-50';
+                if (phase === 7) return currentPhase === phase ? 'bg-gradient-to-r from-yellow-500 to-orange-500 text-white' : 'text-orange-600 hover:bg-orange-50';
+                return 'text-gray-600';
+              };
+              
+              const getPhaseEmoji = (phase) => {
+                const emojis = { 1: '📗', 2: '📘', 3: '📕', 4: '📜', 5: '🔥', 6: '💀', 7: '🏆' };
+                return emojis[phase] || '';
+              };
+              
               return (
                 <button
                   key={phase}
                   onClick={() => unlocked && setCurrentPhase(phase)}
                   disabled={!unlocked}
-                  className={`px-6 py-3 rounded-lg font-semibold transition-all flex items-center gap-2 ${
-                    currentPhase === phase
-                      ? 'bg-blue-600 text-white shadow-md'
+                  className={`px-4 py-3 rounded-lg font-semibold transition-all flex flex-col items-center gap-1 min-w-[80px] ${
+                    unlocked
+                      ? getPhaseColor(phase) + (currentPhase === phase ? ' shadow-md' : '')
+                      : 'text-gray-400 bg-gray-50 cursor-not-allowed'
+                  } ${phase > 4 && unlocked ? 'animate-pulse' : ''}`}
+                  title={phase > 4 ? 'Fase Extrema - Solo para valientes' : ''}
+                >
+                  <div className="flex items-center gap-1">
+                    {unlocked ? <Unlock size={14} /> : <Lock size={14} />}
+                    <span className="text-lg">{getPhaseEmoji(phase)}</span>
+                  </div>
+                  <div className="text-sm">Fase {phase}</div>
+                  <div className="text-xs opacity-75">
+                    {getPhaseProgress(phase)}%
+                  </div>
+                  {phase > 4 && unlocked && (
+                    <div className="text-xs font-bold">
+                      {phase === 5 && 'MENTAL'}
+                      {phase === 6 && 'IMPOSIBLE'}
+                      {phase === 7 && 'TRANSCENDENTAL'}
+                    </div>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Advertencia para Fases Extremas */}
+        {currentPhase > 4 && (
+          <div className="mb-8 bg-gradient-to-r from-red-500 to-purple-600 text-white p-6 rounded-xl shadow-lg border-2 border-red-300">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="text-3xl">⚠️</div>
+              <div>
+                <h3 className="text-xl font-bold">
+                  {currentPhase === 5 && '🧠 ZONA DE RETOS MENTALES EXTREMOS'}
+                  {currentPhase === 6 && '💀 ZONA DE TÉCNICA IMPOSIBLE'}
+                  {currentPhase === 7 && '🏆 ZONA DE TRANSCENDENCIA MUSICAL'}
+                </h3>
+                <p className="text-sm opacity-90">
+                  {currentPhase === 5 && 'Estos ejercicios desafían tu comprensión armónica y capacidad de procesamiento mental.'}
+                  {currentPhase === 6 && 'Combinaciones de técnicas que parecen físicamente imposibles. Procede bajo tu propio riesgo.'}
+                  {currentPhase === 7 && 'El nivel final. Maestría absoluta que trasciende la técnica pura.'}
+                </p>
+              </div>
+            </div>
+            <div className="text-xs opacity-75">
+              {currentPhase === 5 && '⚡ Requiere: Memoria fotográfica, procesamiento mental extremo, resistencia psicológica'}
+              {currentPhase === 6 && '🔥 Requiere: Coordinación sobrehumana, técnicas simultáneas, preparación física extrema'}
+              {currentPhase === 7 && '✨ Requiere: Fusión total mente-cuerpo-música, creatividad transcendental, estado meditativo'}
+            </div>
+          </div>
+        )}
                       : unlocked
                         ? 'text-gray-600 hover:bg-gray-100'
                         : 'text-gray-400 bg-gray-50 cursor-not-allowed'
