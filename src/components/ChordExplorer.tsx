@@ -22,7 +22,8 @@ const ChordExplorer = () => {
     4: [6, 7, 8, 9], // Secuencias 7-10: Aplicación musical avanzada
     5: [10, 11], // Secuencias 11-12: Retos mentales extremos
     6: [12, 13], // Secuencias 13-14: Técnica imposible
-    7: [14] // Secuencia 15: Transcendencia total
+    7: [14], // Secuencia 15: Transcendencia total
+    8: [15, 16, 17] // Secuencias 16-18: Retos cerebrales extremos
   };
 
   const chordSequences = [
@@ -166,6 +167,40 @@ const ChordExplorer = () => {
       phase: 7,
       tempoRange: [220, 300],
       specialTechnique: "Ejecución ciega + Improvisación simultánea + Canto de intervalos + Meditación activa"
+    },
+    // NUEVAS SECUENCIAS CEREBRALES EXTREMAS
+    {
+      name: "Secuencia 16 - Análisis Armónico en Tiempo Real",
+      chords: ["Cmaj7#11/E", "F#m7b5/A", "B7alt/D#", "Em(maj9)/G", "Am7b13/C", "D7#9#11/F#", "Gmaj9b5/B", "C#m7b5/E", "F#7alt/A#", "Bm(maj7)/D"],
+      scales: ["Lidio", "Locrio", "Alterada", "Menor Melódica", "Menor Natural", "Alterada", "Lidio", "Locrio", "Alterada", "Menor Melódica"],
+      difficulty: "Cerebral",
+      positions: ["I", "V", "VII", "III", "V", "II", "III", "VII", "II", "VII"],
+      phase: 8,
+      tempoRange: [80, 120],
+      specialTechnique: "Análisis funcional + Identificación de escalas + Nomenclatura en tiempo real",
+      mentalChallenge: "Nombra la función armónica de cada acorde mientras tocas"
+    },
+    {
+      name: "Secuencia 17 - Transposición Mental Extrema",
+      chords: ["Dm7", "G7", "Cmaj7", "Am7", "F#m7b5", "B7", "Em7", "C#m7b5", "F#7", "Bm7"],
+      scales: ["Dórico", "Mixolidio", "Mayor", "Menor Natural", "Locrio", "Mixolidio", "Menor Natural", "Locrio", "Mixolidio", "Menor Natural"],
+      difficulty: "Cerebral",
+      positions: ["V", "III", "III", "V", "II", "VII", "VII", "IV", "II", "VII"],
+      phase: 8,
+      tempoRange: [60, 100],
+      specialTechnique: "Transposición mental + Doble procesamiento + Análisis comparativo",
+      mentalChallenge: "Toca en Dm pero piensa en Gm - transpón mentalmente cada acorde"
+    },
+    {
+      name: "Secuencia 18 - Memoria Fotográfica Total",
+      chords: ["Ebmaj9#11", "Cm7b5", "Fm(maj7)", "Bb13", "Gm7b5", "C7alt", "Fm9", "Dm7b5", "G7#9", "Cm(maj7)", "Abmaj7#11", "Fm7", "Bb7sus4", "Ebmaj7", "Cm9", "F7#11", "Bbmaj9", "Gm7", "C7alt", "Fm(maj9)"],
+      scales: ["Lidio", "Locrio", "Menor Melódica", "Mixolidio", "Locrio", "Alterada", "Menor Natural", "Locrio", "Alterada", "Menor Melódica", "Lidio", "Menor Natural", "Mixolidio", "Mayor", "Menor Natural", "Lidio", "Mayor", "Menor Natural", "Alterada", "Menor Melódica"],
+      difficulty: "Cerebral",
+      positions: ["VI", "III", "I", "VI", "III", "III", "I", "V", "III", "III", "IV", "I", "VI", "VI", "III", "I", "VI", "III", "III", "I"],
+      phase: 8,
+      tempoRange: [40, 80],
+      specialTechnique: "Memorización perfecta + Ejecución ciega + Análisis teórico simultáneo",
+      mentalChallenge: "Memoriza los 20 acordes, toca sin mirar, analiza cada función armónica"
     }
   ];
 
@@ -360,6 +395,44 @@ const ChordExplorer = () => {
           mentalChallenge: "Ejecución perfecta + enseñanza + análisis teórico simultáneo"
         }
       ]
+    },
+    8: {
+      title: "FASE 8: Retos Cerebrales Extremos",
+      description: "Desafíos que requieren procesamiento mental múltiple y análisis teórico en tiempo real",
+      exercises: [
+        { 
+          name: "Análisis Funcional en Vivo", 
+          duration: "60 min", 
+          sequence: 15,
+          instructions: "Secuencia 16. Mientras tocas, di en voz alta la función de cada acorde (I, V7, etc).",
+          targetTempo: 80,
+          mentalChallenge: "Ejecución + análisis funcional + verbalización simultánea"
+        },
+        { 
+          name: "Transposición Mental Doble", 
+          duration: "75 min", 
+          sequence: 16,
+          instructions: "Secuencia 17 en Dm, pero piensa como si fuera Gm. Transpón mentalmente cada acorde.",
+          targetTempo: 60,
+          mentalChallenge: "Tocar en una tonalidad mientras procesas otra diferente"
+        },
+        { 
+          name: "Memoria Fotográfica + Análisis", 
+          duration: "90 min", 
+          sequence: 17,
+          instructions: "Memoriza Secuencia 18 (20 acordes). Toca sin mirar mientras analizas cada función.",
+          targetTempo: 40,
+          mentalChallenge: "Memorización perfecta + ejecución ciega + análisis teórico"
+        },
+        { 
+          name: "Profesor Virtual", 
+          duration: "120 min", 
+          sequence: 15,
+          instructions: "Enseña Secuencia 16 a un estudiante imaginario mientras la ejecutas perfectamente.",
+          targetTempo: 70,
+          mentalChallenge: "Ejecución + enseñanza + análisis pedagógico simultáneo"
+        }
+      ]
     }
   };
 
@@ -435,7 +508,11 @@ const ChordExplorer = () => {
       'Intermedio': 'text-green-600 bg-green-100',
       'Avanzado': 'text-orange-600 bg-orange-100',
       'Experto': 'text-red-600 bg-red-100',
-      'Virtuoso': 'text-purple-600 bg-purple-100'
+      'Virtuoso': 'text-purple-600 bg-purple-100',
+      'Demencial': 'text-red-700 bg-red-200 border border-red-400',
+      'Imposible': 'text-purple-700 bg-purple-200 border border-purple-400',
+      'Transcendental': 'text-yellow-700 bg-gradient-to-r from-yellow-100 to-orange-100 border border-yellow-400',
+      'Cerebral': 'text-blue-700 bg-blue-200 border border-blue-400 animate-pulse'
     };
     return colors[difficulty] || 'text-gray-600 bg-gray-100';
   };
@@ -447,14 +524,16 @@ const ChordExplorer = () => {
   };
 
   const ChordCard = ({ chord, scale, index, isActive, difficulty, position }) => (
-    <div className={`p-3 rounded-lg border-2 transition-all duration-300 ${
+    <div className={`p-2 rounded-lg border-2 transition-all duration-300 ${
       isActive 
         ? 'border-blue-500 bg-blue-50 shadow-lg transform scale-105' 
         : 'border-gray-200 bg-white hover:border-gray-300'
     }`}>
       <div className="text-center">
-        <div className="text-lg font-bold text-gray-800 mb-1 leading-tight">{chord}</div>
-        <div className="text-xs text-gray-500 mb-1">{scale}</div>
+        <div className="text-sm font-bold text-gray-800 mb-1 leading-tight break-words min-h-[2.5rem] flex items-center justify-center">
+          {chord}
+        </div>
+        <div className="text-xs text-gray-500 mb-1 truncate" title={scale}>{scale}</div>
         <div className="text-xs text-blue-600 font-medium">Pos: {position}</div>
         <div className="text-xs text-gray-400">#{index + 1}</div>
       </div>
@@ -676,10 +755,30 @@ const ChordExplorer = () => {
                     🔥 <strong>Nivel Experto:</strong> Voicings complejos con saltos de posición. Usa todas las técnicas de digitación disponibles.
                   </div>
                 )}
+                {chordSequences[currentSequence].difficulty === 'Cerebral' && (
+                  <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-700 mt-2">
+                    🧠 <strong>Nivel Cerebral:</strong> Requiere procesamiento mental múltiple. Análisis teórico en tiempo real.
+                  </div>
+                )}
+                {chordSequences[currentSequence].difficulty === 'Demencial' && (
+                  <div className="p-3 bg-red-100 border border-red-300 rounded-lg text-sm text-red-800 mt-2">
+                    🔥 <strong>Nivel Demencial:</strong> Modulaciones extremas. Requiere memoria fotográfica y procesamiento mental sobrehumano.
+                  </div>
+                )}
+                {chordSequences[currentSequence].difficulty === 'Imposible' && (
+                  <div className="p-3 bg-purple-100 border border-purple-300 rounded-lg text-sm text-purple-800 mt-2">
+                    💀 <strong>Nivel Imposible:</strong> Técnicas que desafían las leyes de la física. Solo para los más valientes.
+                  </div>
+                )}
+                {chordSequences[currentSequence].difficulty === 'Transcendental' && (
+                  <div className="p-3 bg-gradient-to-r from-yellow-100 to-orange-100 border border-yellow-300 rounded-lg text-sm text-yellow-800 mt-2">
+                    🏆 <strong>Nivel Transcendental:</strong> Más allá de la técnica. Fusión total entre mente, cuerpo y música.
+                  </div>
+                )}
               </div>
               
               {/* Grid de Acordes - Más grande en el área principal */}
-              <div className="grid grid-cols-3 md:grid-cols-5 gap-3 mb-6 max-h-80 overflow-y-auto">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 mb-6 max-h-96 overflow-y-auto">
                 {chordSequences[currentSequence].chords.map((chord, index) => (
                   <div key={index} className="relative group">
                     <ChordCard
@@ -691,14 +790,16 @@ const ChordExplorer = () => {
                       difficulty={chordSequences[currentSequence].difficulty}
                     />
                     {/* Tooltip con información de la escala */}
-                    <div className="absolute z-10 invisible group-hover:visible bg-gray-800 text-white p-3 rounded-lg shadow-lg -top-2 left-full ml-2 w-64 text-xs">
+                    <div className="absolute z-20 invisible group-hover:visible bg-gray-900 text-white p-3 rounded-lg shadow-xl -top-2 left-full ml-2 w-72 text-xs border border-gray-700">
                       {(() => {
                         const scaleInfo = getScaleInfo(chordSequences[currentSequence].scales[index]);
                         return scaleInfo ? (
                           <div>
-                            <div className="font-semibold mb-1">{scaleInfo.name}</div>
-                            <div className="mb-1">Intervalos: {scaleInfo.intervals}</div>
-                            <div className="text-gray-300">{scaleInfo.characteristics}</div>
+                            <div className="font-bold text-yellow-300 mb-2">{chord}</div>
+                            <div className="font-semibold mb-1 text-blue-300">{scaleInfo.name}</div>
+                            <div className="mb-1 font-mono text-green-300">Intervalos: {scaleInfo.intervals}</div>
+                            <div className="text-gray-300 mb-2">{scaleInfo.characteristics}</div>
+                            <div className="text-purple-300 text-xs">Posición: {position}</div>
                           </div>
                         ) : (
                           <div>Información no disponible</div>
