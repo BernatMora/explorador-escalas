@@ -1052,14 +1052,11 @@ const ChordExplorer: React.FC = () => {
           </div>
 
           {/* Panel Lateral */}
-          <div className="lg:col-span-2 grid lg:grid-cols-2 gap-6">
+          <div className="lg:col-span-2 space-y-6">
             {/* Panel de Anatomía de Acordes */}
-            <div className="lg:col-span-1">
-              <ChordAnatomyPanel selectedChord={selectedChord} />
-            </div>
+            <ChordAnatomyPanel selectedChord={selectedChord} />
             
-            {/* Otros Paneles */}
-            <div className="lg:col-span-1 space-y-6">
+            {/* Panel de Metodología */}
             {/* Panel de Metodología */}
             <MethodologyPanel currentPhase={currentPhase} />
             
@@ -1073,7 +1070,6 @@ const ChordExplorer: React.FC = () => {
               isPlaying={isPlaying}
               setIsPlaying={setIsPlaying}
             />
-            </div>
           </div>
         </div>
         
