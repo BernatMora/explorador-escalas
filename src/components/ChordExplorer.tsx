@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Music, Play, Pause, Clock, Target, BookOpen, Unlock, Lock, RotateCcw, Brain, Zap, Eye, GraduationCap } from 'lucide-react';
 import Metronome from './Metronome';
 import ScaleTheoryPanel from './ScaleTheoryPanel';
-import ChordAnatomy from './ChordAnatomy';
+import ChordAnatomyPanel from './ChordAnatomyPanel';
 import MethodologyPanel from './MethodologyPanel';
 import { getScaleInfo } from '../data/scaleTheory';
 
@@ -54,9 +54,17 @@ const ChordCard: React.FC<ChordCardProps> = ({ chord, scale, position, index, is
   };
 
   return (
-    <div className={`p-3 border-2 rounded-lg transition-all duration-200 hover:shadow-md min-h-[100px] flex flex-col justify-between ${
+    <div 
+      className={`p-3 border-2 rounded-lg transition-all duration-200 hover:shadow-md min-h-[100px] flex flex-col justify-between cursor-pointer ${
       isActive ? 'ring-2 ring-blue-500 bg-blue-100' : getDifficultyColor(difficulty)
-    }`}>
+    }`}
+      onClick={() => {
+        // Esta función se pasará desde el componente padre
+        if (window.selectChord) {
+          window.selectChord({ name: chord, scale, position, index });
+        }
+      }}
+    >
       <div className="text-center">
         <div className="text-xs text-gray-500 mb-1">#{index + 1}</div>
         <div className="font-bold text-sm leading-tight mb-1 break-words">{chord}</div>
@@ -79,6 +87,12 @@ const ChordExplorer: React.FC = () => {
   const [activeExercise, setActiveExercise] = useState<string | null>(null);
   const [exerciseTimer, setExerciseTimer] = useState(0);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const [selectedChord, setSelectedChord] = useState<{
+    name: string;
+    scale: string;
+    position: number;
+    index: number;
+  } | null>(null);
 
   // Secuencias de acordes
   const chordSequences: ChordSequence[] = [
@@ -637,6 +651,13 @@ const ChordExplorer: React.FC = () => {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
+  // Función para seleccionar acordes
+  useEffect(() => {
+    (window as any).selectChord = (chordData: any) => {
+      setSelectedChord(chordData);
+    };
+  }, []);
+
   const currentExercises = exercisesByPhase[currentPhase] || [];
 
   return (
@@ -738,7 +759,7 @@ const ChordExplorer: React.FC = () => {
         )}
 
         {/* Contenido Principal */}
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid lg:grid-cols-4 gap-6">
           {/* Panel Principal de Ejercicios */}
           <div className="lg:col-span-2 space-y-6">
             <div className="bg-white rounded-xl shadow-lg p-6">
@@ -940,9 +961,9 @@ const ChordExplorer: React.FC = () => {
               </div>
               
               {/* Grid de Acordes - Mejorado para acordes largos */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 mb-6 max-h-80 overflow-y-auto">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 mb-6 max-h-80 overflow-y-auto">
                 {chordSequences[currentSequence].chords.map((chord, index) => (
-                  <div key={index} className="relative group space-y-2">
+                  <div key={index} className="relative group">
                     <ChordCard
                       chord={chord}
                       scale={chordSequences[currentSequence].scales[index]}
@@ -950,12 +971,6 @@ const ChordExplorer: React.FC = () => {
                       index={index}
                       isActive={false}
                       difficulty={chordSequences[currentSequence].difficulty}
-                    />
-                    {/* Anatomía del Acorde - Ahora siempre visible */}
-                    <ChordAnatomy 
-                      chordName={chord}
-                      scaleName={chordSequences[currentSequence].scales[index]}
-                      position={chordSequences[currentSequence].positions[index]}
                     />
                   </div>
                 ))}
@@ -1037,7 +1052,14 @@ const ChordExplorer: React.FC = () => {
           </div>
 
           {/* Panel Lateral */}
-          <div className="space-y-6">
+          <div className="lg:col-span-2 grid lg:grid-cols-2 gap-6">
+            {/* Panel de Anatomía de Acordes */}
+            <div className="lg:col-span-1">
+              <ChordAnatomyPanel selectedChord={selectedChord} />
+            </div>
+            
+            {/* Otros Paneles */}
+            <div className="lg:col-span-1 space-y-6">
             {/* Panel de Metodología */}
             <MethodologyPanel currentPhase={currentPhase} />
             
@@ -1051,8 +1073,18 @@ const ChordExplorer: React.FC = () => {
               isPlaying={isPlaying}
               setIsPlaying={setIsPlaying}
             />
+            </div>
           </div>
         </div>
+        
+        {/* Script para manejar la selección de acordes */}
+        <script dangerouslySetInnerHTML={{
+          __html: `
+            window.selectChord = function(chordData) {
+              // Esta función será reemplazada por React
+            };
+          `
+        }} />
       </div>
     </div>
   );
