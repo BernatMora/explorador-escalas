@@ -399,7 +399,7 @@ const ChordExplorer = () => {
         {/* Contenido Principal */}
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Panel Principal de Ejercicios */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-2 space-y-6">
             <div className="bg-white rounded-xl shadow-lg p-6">
               <div className="flex justify-between items-start mb-4">
                 <h2 className="text-2xl font-bold text-gray-800">
@@ -480,31 +480,17 @@ const ChordExplorer = () => {
                 </div>
               )}
             </div>
-          </div>
 
-          {/* Panel Lateral */}
-          <div className="space-y-6">
-            {/* Panel de Teoría Musical */}
-            <ScaleTheoryPanel />
-            
-            {/* Metrónomo */}
-            <Metronome 
-              tempo={tempo}
-              setTempo={setTempo}
-              isPlaying={isPlaying}
-              setIsPlaying={setIsPlaying}
-            />
-            
-            {/* Secuencias de Acordes */}
+            {/* Secuencias de Acordes - Movido al área principal */}
             <div className="bg-white rounded-xl shadow-lg p-6">
-              <h3 className="text-xl font-bold text-gray-800 mb-4">Secuencias de Práctica</h3>
+              <h3 className="text-xl font-bold text-gray-800 mb-4">🎼 Secuencias de Práctica</h3>
               
               <div className="mb-4">
                 <div className="flex items-center gap-2 mb-2">
                   <select
                     value={currentSequence}
                     onChange={(e) => setCurrentSequence(parseInt(e.target.value))}
-                    className="flex-1 p-2 border border-gray-300 rounded-lg text-sm"
+                    className="flex-1 p-3 border border-gray-300 rounded-lg text-sm"
                   >
                     {chordSequences.map((seq, index) => (
                       <option key={index} value={index}>
@@ -512,13 +498,13 @@ const ChordExplorer = () => {
                       </option>
                     ))}
                   </select>
-                  <div className={`px-2 py-1 rounded-full text-xs font-medium ${getDifficultyColor(chordSequences[currentSequence].difficulty)}`}>
+                  <div className={`px-3 py-1 rounded-full text-xs font-medium ${getDifficultyColor(chordSequences[currentSequence].difficulty)}`}>
                     {chordSequences[currentSequence].difficulty}
                   </div>
                 </div>
 
                 {/* Información de la secuencia */}
-                <div className="p-3 bg-blue-50 border border-blue-200 rounded text-sm">
+                <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg text-sm">
                   <div className="flex items-center justify-between mb-2">
                     <span className="font-medium text-blue-800">
                       Fase {chordSequences[currentSequence].phase} - {chordSequences[currentSequence].difficulty}
@@ -537,18 +523,19 @@ const ChordExplorer = () => {
                 
                 {/* Alertas de dificultad */}
                 {chordSequences[currentSequence].difficulty === 'Virtuoso' && (
-                  <div className="p-2 bg-purple-50 border border-purple-200 rounded text-xs text-purple-700 mb-2">
+                  <div className="p-3 bg-purple-50 border border-purple-200 rounded-lg text-sm text-purple-700 mt-2">
                     🎸 <strong>Nivel Virtuoso:</strong> Requiere técnicas avanzadas como tapping, wide stretches y hybrid picking. ¡Calienta bien antes de intentar!
                   </div>
                 )}
                 {chordSequences[currentSequence].difficulty === 'Experto' && (
-                  <div className="p-2 bg-red-50 border border-red-200 rounded text-xs text-red-700 mb-2">
+                  <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700 mt-2">
                     🔥 <strong>Nivel Experto:</strong> Voicings complejos con saltos de posición. Usa todas las técnicas de digitación disponibles.
                   </div>
                 )}
               </div>
               
-              <div className="grid grid-cols-2 gap-1 mb-4 max-h-96 overflow-y-auto">
+              {/* Grid de Acordes - Más grande en el área principal */}
+              <div className="grid grid-cols-3 md:grid-cols-5 gap-3 mb-6 max-h-80 overflow-y-auto">
                 {chordSequences[currentSequence].chords.map((chord, index) => (
                   <div key={index} className="relative group">
                     <ChordCard
@@ -578,7 +565,7 @@ const ChordExplorer = () => {
                 ))}
               </div>
               
-              <div className="flex gap-2">
+              <div className="flex gap-3">
                 <button
                   onClick={() => {
                     const phaseSeqs = phaseSequences[currentPhase] || [];
@@ -586,10 +573,10 @@ const ChordExplorer = () => {
                     const nextIndex = (currentIndex + 1) % phaseSeqs.length;
                     setCurrentSequence(phaseSeqs[nextIndex]);
                   }}
-                  className="flex-1 px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors flex items-center justify-center gap-2 text-sm"
+                  className="flex-1 px-4 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors flex items-center justify-center gap-2"
                 >
-                  <RotateCcw size={14} />
-                  Siguiente de Fase
+                  <RotateCcw size={16} />
+                  Siguiente de Fase {currentPhase}
                 </button>
                 
                 <button
@@ -600,15 +587,29 @@ const ChordExplorer = () => {
                     const randomExpert = expertSequences[Math.floor(Math.random() * expertSequences.length)];
                     setCurrentSequence(randomExpert.index);
                   }}
-                  className="px-3 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors text-sm"
+                  className="px-4 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
                 >
-                  🔥 Desafío
+                  🔥 Desafío Aleatorio
                 </button>
               </div>
             </div>
+          </div>
+
+          {/* Panel Lateral */}
+          <div className="space-y-6">
+            {/* Panel de Teoría Musical */}
+            <ScaleTheoryPanel />
+            
+            {/* Metrónomo */}
+            <Metronome 
+              tempo={tempo}
+              setTempo={setTempo}
+              isPlaying={isPlaying}
+              setIsPlaying={setIsPlaying}
+            />
             
             {/* Progreso General */}
-            <div className="bg-white rounded-xl shadow-lg p-6">
+            <div className="bg-white rounded-xl shadow-lg p-6 lg:col-span-2">
               <h3 className="text-xl font-bold text-gray-800 mb-4">Progreso General</h3>
               
               <div className="space-y-3">
