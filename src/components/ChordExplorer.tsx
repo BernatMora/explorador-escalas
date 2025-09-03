@@ -19,7 +19,10 @@ const ChordExplorer = () => {
     1: [0, 1], // Secuencias 1-2: Básicas e intermedias
     2: [2, 3], // Secuencias 3-4: Exploración sonora
     3: [4, 5], // Secuencias 5-6: Fluidez y velocidad
-    4: [6, 7, 8, 9] // Secuencias 7-10: Aplicación musical avanzada
+    4: [6, 7, 8, 9], // Secuencias 7-10: Aplicación musical avanzada
+    5: [10, 11], // Secuencias 11-12: Retos mentales extremos
+    6: [12, 13], // Secuencias 13-14: Técnica imposible
+    7: [14] // Secuencia 15: Transcendencia total
   };
 
   const chordSequences = [
@@ -112,6 +115,57 @@ const ChordExplorer = () => {
       positions: ["VI", "VI", "VI", "III", "VIII", "III", "VI", "VI", "VI", "VI"],
       phase: 4,
       tempoRange: [140, 200]
+    },
+    // NUEVAS SECUENCIAS EXTREMAS
+    {
+      name: "Secuencia 11 - Modulación Constante",
+      chords: ["C#m(maj7)#11/B", "F7altb13/Eb", "Bbmaj9#5/A", "Dm7b5b9/C", "G#7#9#11/F#", "Cmaj13b5/B", "F#m(maj9)/E", "B7altb13/A", "Em7#11b13/D", "A7#5b9/G"],
+      scales: ["Menor Melódica", "Alterada", "Lidio", "Locrio", "Alterada", "Lidio", "Menor Melódica", "Alterada", "Locrio", "Alterada"],
+      difficulty: "Demencial",
+      positions: ["IX", "VI", "VI", "V", "IV", "VII", "VII", "VII", "VII", "V"],
+      phase: 5,
+      tempoRange: [150, 220],
+      specialTechnique: "Modulación cada 2 acordes + Saltos de posición extremos"
+    },
+    {
+      name: "Secuencia 12 - Polirritmo Armónico",
+      chords: ["Fm(maj13)#11/D#", "Bb7#5b9add#4/G#", "Ebmaj7b6#11/C#", "Am7b5#9b13/F#", "D7altb13add#5/B", "Gm(maj7)#5/E", "C7b5#9#11/A", "Fm7#11b13/D", "Bb13altb5/G", "Ebmaj9#5b13/C"],
+      scales: ["Menor Armónica", "Alterada", "Lidio", "Locrio", "Alterada", "Menor Melódica", "Alterada", "Dórico", "Alterada", "Lidio"],
+      difficulty: "Demencial",
+      positions: ["VI", "IV", "XI", "II", "VII", "III", "V", "X", "III", "VIII"],
+      phase: 5,
+      tempoRange: [160, 240],
+      specialTechnique: "Ritmo 7/8 + Voicings imposibles + Cambios de afinación mental"
+    },
+    {
+      name: "Secuencia 13 - Microtonalidad Simulada",
+      chords: ["C7#9b13add#4/B", "F#m(maj7)b5#11/E", "Bb7altb9add#5/Ab", "Ebmaj13#5b9/D", "G#m7b5#9b13/F#", "C#7alt#11b5/B", "Fmaj7#5b13add#9/E", "Bm(maj9)b5#11/A", "E7#5#9b13add#4/D", "Am(maj13)#5b9/G"],
+      scales: ["Alterada", "Menor Armónica", "Alterada", "Lidio", "Locrio", "Alterada", "Lidio", "Menor Melódica", "Alterada", "Menor Armónica"],
+      difficulty: "Imposible",
+      positions: ["VII", "VII", "VI", "VI", "IV", "VII", "I", "V", "VII", "III"],
+      phase: 6,
+      tempoRange: [180, 260],
+      specialTechnique: "Bends microtonales + Tapping a 3 manos + Preparación mental extrema"
+    },
+    {
+      name: "Secuencia 14 - Caos Controlado",
+      chords: ["Db7#5#9#11b13/C", "Gmaj7#5b9add#4/F#", "Cm(maj13)b5#11/Bb", "F#7altb9add#5/E", "Bmaj9#11b13/A#", "Em7b5#9add#4/D", "A7#5altb13/G#", "Dm(maj7)#5b9/C#", "G#7#9#11b5/F#", "Cmaj13altb5/B"],
+      scales: ["Alterada", "Lidio", "Menor Armónica", "Alterada", "Lidio", "Locrio", "Alterada", "Menor Melódica", "Alterada", "Lidio"],
+      difficulty: "Imposible",
+      positions: ["I", "II", "III", "V", "VII", "VII", "IV", "V", "IV", "VII"],
+      phase: 6,
+      tempoRange: [200, 280],
+      specialTechnique: "Cambio de posición cada acorde + Técnicas simultáneas + Memoria fotográfica"
+    },
+    {
+      name: "Secuencia 15 - Transcendencia Musical",
+      chords: ["F#m(maj9)#11b13/E#", "B7#5altb9add#4/A#", "Emaj13#5b9/D#", "A#m7b5#9#11/G#", "D#7altb13add#5/C#", "G#m(maj7)#5b9/F#", "C#7#9#11b5add#4/B", "F#maj9altb13/E#", "Bm(maj13)#5b9/A#", "E7#5#9#11b13/D#"],
+      scales: ["Menor Melódica", "Alterada", "Lidio", "Locrio", "Alterada", "Menor Armónica", "Alterada", "Lidio", "Menor Melódica", "Alterada"],
+      difficulty: "Transcendental",
+      positions: ["II", "VII", "IV", "VI", "VI", "II", "IV", "II", "VII", "IV"],
+      phase: 7,
+      tempoRange: [220, 300],
+      specialTechnique: "Ejecución ciega + Improvisación simultánea + Canto de intervalos + Meditación activa"
     }
   ];
 
@@ -214,6 +268,96 @@ const ChordExplorer = () => {
           sequence: 9,
           instructions: "Secuencia 10 (Ultimate Challenge). ¡El reto máximo! 140-200 BPM.",
           targetTempo: 170
+        }
+      ]
+    },
+    5: {
+      title: "FASE 5: Retos Mentales Extremos",
+      description: "Modulaciones constantes y cambios de escala que desafían tu comprensión armónica",
+      exercises: [
+        { 
+          name: "Modulación Cada 2 Acordes", 
+          duration: "45 min", 
+          sequence: 10,
+          instructions: "Secuencia 11. Cambia de centro tonal cada 2 acordes. Memoriza las modulaciones.",
+          targetTempo: 150,
+          mentalChallenge: "Identifica la nueva tonalidad en tiempo real"
+        },
+        { 
+          name: "Polirritmo Armónico 7/8", 
+          duration: "40 min", 
+          sequence: 11,
+          instructions: "Secuencia 12 en compás 7/8. Mantén el patrón rítmico mientras cambias voicings.",
+          targetTempo: 160,
+          mentalChallenge: "Coordina ritmo irregular con armonía compleja"
+        },
+        { 
+          name: "Improvisación Sobre Caos", 
+          duration: "50 min", 
+          sequence: 10,
+          instructions: "Improvisa melodías sobre Secuencia 11. Cada nota debe justificar la escala.",
+          targetTempo: 140,
+          mentalChallenge: "Improvisa coherentemente sobre modulaciones extremas"
+        }
+      ]
+    },
+    6: {
+      title: "FASE 6: Técnica Imposible",
+      description: "Combinaciones de técnicas que parecen físicamente imposibles",
+      exercises: [
+        { 
+          name: "Tapping + Hybrid + Bends", 
+          duration: "60 min", 
+          sequence: 12,
+          instructions: "Secuencia 13. Tapping con mano derecha, hybrid picking, bends microtonales simultáneos.",
+          targetTempo: 180,
+          mentalChallenge: "Coordina 3 técnicas avanzadas simultáneamente"
+        },
+        { 
+          name: "Cambio de Posición Extremo", 
+          duration: "55 min", 
+          sequence: 13,
+          instructions: "Secuencia 14. Cada acorde en posición diferente. Saltos de 5+ trastes.",
+          targetTempo: 200,
+          mentalChallenge: "Navegación instantánea del mástil completo"
+        },
+        { 
+          name: "Ejecución Ciega Total", 
+          duration: "70 min", 
+          sequence: 12,
+          instructions: "Secuencia 13 con ojos cerrados. Solo guíate por el tacto y el oído.",
+          targetTempo: 160,
+          mentalChallenge: "Ejecución perfecta sin referencia visual"
+        }
+      ]
+    },
+    7: {
+      title: "FASE 7: Transcendencia Musical",
+      description: "El nivel final. Maestría absoluta que trasciende la técnica",
+      exercises: [
+        { 
+          name: "Meditación Armónica", 
+          duration: "90 min", 
+          sequence: 14,
+          instructions: "Secuencia 15. Toca mientras meditas. Cada acorde debe ser una experiencia espiritual.",
+          targetTempo: 220,
+          mentalChallenge: "Fusión total entre mente, cuerpo y música"
+        },
+        { 
+          name: "Improvisación Transcendental", 
+          duration: "120 min", 
+          sequence: 14,
+          instructions: "Crea música nueva usando Secuencia 15 como base. Trasciende las reglas.",
+          targetTempo: 250,
+          mentalChallenge: "Creatividad pura sin limitaciones técnicas"
+        },
+        { 
+          name: "Enseñanza Simultánea", 
+          duration: "150 min", 
+          sequence: 14,
+          instructions: "Toca Secuencia 15 mientras explicas la teoría a un estudiante imaginario.",
+          targetTempo: 280,
+          mentalChallenge: "Ejecución perfecta + enseñanza + análisis teórico simultáneo"
         }
       ]
     }
