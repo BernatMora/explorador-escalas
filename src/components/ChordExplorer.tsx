@@ -951,30 +951,12 @@ const ChordExplorer: React.FC = () => {
                       isActive={false}
                       difficulty={chordSequences[currentSequence].difficulty}
                     />
-                    {/* Anatomía del Acorde */}
+                    {/* Anatomía del Acorde - Ahora siempre visible */}
                     <ChordAnatomy 
                       chordName={chord}
                       scaleName={chordSequences[currentSequence].scales[index]}
                       position={chordSequences[currentSequence].positions[index]}
                     />
-                    {/* Tooltip mejorado con información de la escala */}
-                    <div className="absolute z-10 invisible group-hover:visible bg-gray-800 text-white p-3 rounded-lg shadow-lg -top-2 left-full ml-2 w-64 text-xs">
-                      {(() => {
-                        const scaleInfo = getScaleInfo(chordSequences[currentSequence].scales[index]);
-                        return scaleInfo ? (
-                          <div>
-                            <div className="font-semibold mb-1">{scaleInfo.name}</div>
-                            <div className="mb-1">Intervalos: {scaleInfo.intervals}</div>
-                            <div className="text-gray-300 mb-2">{scaleInfo.characteristics}</div>
-                            <div className="text-yellow-300 text-xs">
-                              Emociones: {scaleInfo.emotions}
-                            </div>
-                          </div>
-                        ) : (
-                          <div>Información no disponible</div>
-                        );
-                      })()}
-                    </div>
                   </div>
                 ))}
               </div>
