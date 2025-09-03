@@ -630,7 +630,7 @@ const ChordExplorer = () => {
                   return (
                     <div 
                       key={index}
-                      className={`p-4 rounded-lg border-2 transition-all ${
+                      className={\`p-4 rounded-lg border-2 transition-all ${
                         isActive
                           ? 'border-green-500 bg-green-50 shadow-lg'
                           : isCompleted
@@ -642,7 +642,7 @@ const ChordExplorer = () => {
                         <div className="flex items-center gap-3">
                           <button
                             onClick={() => toggleExercise(currentPhase, index)}
-                            className={`p-2 rounded-full ${
+                            className={\`p-2 rounded-full ${
                               isCompleted
                                 ? 'bg-green-500 text-white'
                                 : 'bg-gray-200 text-gray-500'
@@ -661,7 +661,7 @@ const ChordExplorer = () => {
                           <button
                             onClick={() => startExercise(currentPhase, index)}
                             disabled={isActive}
-                            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                            className={\`px-4 py-2 rounded-lg font-medium transition-colors ${
                               isActive
                                 ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                                 : 'bg-blue-600 hover:bg-blue-700 text-white'
@@ -705,7 +705,7 @@ const ChordExplorer = () => {
                       </option>
                     ))}
                   </select>
-                  <div className={`px-3 py-1 rounded-full text-xs font-medium ${getDifficultyColor(chordSequences[currentSequence].difficulty)}`}>
+                  <div className={\`px-3 py-1 rounded-full text-xs font-medium ${getDifficultyColor(chordSequences[currentSequence].difficulty)}`}>
                     {chordSequences[currentSequence].difficulty}
                   </div>
                 </div>
@@ -834,12 +834,12 @@ const ChordExplorer = () => {
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2">
                         <div 
-                          className={`h-2 rounded-full transition-all duration-300 ${
+                          className={\`h-2 rounded-full transition-all duration-300 ${
                             unlocked 
                               ? 'bg-gradient-to-r from-blue-500 to-purple-500'
                               : 'bg-gray-400'
                           }`}
-                          style={{width: `${progress}%`}}
+                          style={{width: \`${progress}%`}}
                         ></div>
                       </div>
                     </div>
@@ -906,7 +906,7 @@ const ChordExplorer = () => {
                 return (
                   <div 
                     key={seqIndex}
-                    className={`p-3 border rounded-lg cursor-pointer transition-all ${
+                    className={\`p-3 border rounded-lg cursor-pointer transition-all ${
                       currentSequence === seqIndex
                         ? 'border-blue-500 bg-blue-50'
                         : 'border-gray-200 hover:border-gray-300'
@@ -915,7 +915,7 @@ const ChordExplorer = () => {
                   >
                     <div className="flex items-center justify-between mb-1">
                       <span className="font-medium text-gray-800">{seq.name}</span>
-                      <span className={`px-2 py-1 rounded text-xs ${getDifficultyColor(seq.difficulty)}`}>
+                      <span className={\`px-2 py-1 rounded text-xs ${getDifficultyColor(seq.difficulty)}`}>
                         {seq.difficulty}
                       </span>
                     </div>
