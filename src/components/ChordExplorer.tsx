@@ -572,239 +572,6 @@ const ChordExplorer: React.FC = () => {
         ],
         warnings: ["Sobrecarga mental extrema", "Requiere maestría pedagógica", "Puede causar agotamiento"]
       }
-    ],
-    9: [
-      {
-        id: "9-1",
-        name: "Exploración Mundial - Asia",
-        description: "Viaja por las escalas asiáticas en una sola progresión",
-        duration: 30,
-        difficulty: "Avanzado",
-        techniques: ["World Scales", "Cultural Adaptation", "Exotic Intervals"],
-        sequenceIds: [16],
-        instructions: [
-          "Cada acorde viene de una escala asiática diferente",
-          "Siente el cambio cultural en cada acorde",
-          "Usa ornamentaciones típicas de cada región",
-          "Conecta con la espiritualidad de cada escala"
-        ]
-      },
-      {
-        id: "9-2",
-        name: "Sopa Árabe-Persa",
-        description: "Desierto musical con escalas del Medio Oriente",
-        duration: 35,
-        difficulty: "Experto",
-        techniques: ["Middle Eastern Scales", "Augmented 2nds", "Desert Vibes"],
-        sequenceIds: [17],
-        instructions: [
-          "Enfatiza las segundas aumentadas",
-          "Crea atmósfera de desierto místico",
-          "Usa microtonos si es posible",
-          "Siente el drama del Medio Oriente"
-        ]
-      },
-      {
-        id: "9-3",
-        name: "Tradiciones Europeas",
-        description: "Escalas ancestrales de Europa del Este",
-        duration: 40,
-        difficulty: "Experto",
-        techniques: ["European Folk", "Gypsy Scales", "Classical Heritage"],
-        sequenceIds: [18],
-        instructions: [
-          "Cada acorde representa una tradición europea",
-          "Siente la historia en cada nota",
-          "Usa técnicas de violín gitano",
-          "Conecta con la memoria ancestral"
-        ]
-      },
-      {
-        id: "9-4",
-        name: "Sopa Mundial Completa",
-        description: "Viaje musical por todo el planeta",
-        duration: 50,
-        difficulty: "Maestro",
-        techniques: ["Global Fusion", "Cultural Synthesis", "World Unity"],
-        sequenceIds: [19],
-        instructions: [
-          "Cada acorde es de un continente diferente",
-          "Fusiona todas las tradiciones musicales",
-          "Crea un lenguaje musical universal",
-          "Siente la unidad en la diversidad"
-        ]
-      }
-    ],
-    10: [
-      {
-        id: "10-1",
-        name: "Viaje Temporal Musical",
-        description: "Desde el Gregoriano hasta el futuro",
-        duration: 45,
-        difficulty: "Maestro",
-        techniques: ["Historical Progression", "Era Blending", "Time Travel"],
-        sequenceIds: [20],
-        instructions: [
-          "Cada acorde representa una época musical",
-          "Siente la evolución de la armonía",
-          "Adapta tu técnica a cada era",
-          "Conecta pasado, presente y futuro"
-        ]
-      },
-      {
-        id: "10-2",
-        name: "Maestros del Pasado",
-        description: "Homenaje a los grandes compositores",
-        duration: 50,
-        difficulty: "Maestro",
-        techniques: ["Classical Masters", "Compositional Styles", "Historical Homage"],
-        sequenceIds: [21],
-        instructions: [
-          "Cada acorde honra a un maestro diferente",
-          "Imita el estilo de cada compositor",
-          "Siente su genio creativo",
-          "Canaliza su espíritu musical"
-        ]
-      },
-      {
-        id: "10-3",
-        name: "Sonidos del Mañana",
-        description: "Escalas que aún no se han inventado",
-        duration: 60,
-        difficulty: "Legendario",
-        techniques: ["Futuristic Harmony", "Experimental Scales", "Time Prophecy"],
-        sequenceIds: [22],
-        instructions: [
-          "Imagina la música del futuro",
-          "Crea sonidos nunca escuchados",
-          "Trasciende las limitaciones actuales",
-          "Profetiza la música del mañana"
-        ]
-      }
-    ],
-    11: [
-      {
-        id: "11-1",
-        name: "Lágrimas Musicales",
-        description: "Escalas que tocan el alma melancólica",
-        duration: 40,
-        difficulty: "Maestro",
-        techniques: ["Emotional Expression", "Melancholic Beauty", "Soul Touch"],
-        sequenceIds: [23],
-        instructions: [
-          "Cada acorde expresa una emoción diferente",
-          "Deja que las lágrimas fluyan musicalmente",
-          "Conecta con tu melancolía más profunda",
-          "Transforma el dolor en belleza"
-        ]
-      },
-      {
-        id: "11-2",
-        name: "Fuego Interior",
-        description: "Pasión ardiente en cada acorde",
-        duration: 45,
-        difficulty: "Maestro",
-        techniques: ["Passionate Expression", "Inner Fire", "Emotional Intensity"],
-        sequenceIds: [24],
-        instructions: [
-          "Enciende tu pasión interior",
-          "Cada acorde debe arder",
-          "Expresa tu fuego más intenso",
-          "Quema con tu música"
-        ]
-      },
-      {
-        id: "11-3",
-        name: "Transcendencia Pura",
-        description: "Escalas que elevan el espíritu",
-        duration: 60,
-        difficulty: "Legendario",
-        techniques: ["Spiritual Transcendence", "Pure Elevation", "Soul Ascension"],
-        sequenceIds: [25],
-        instructions: [
-          "Eleva tu espíritu con cada acorde",
-          "Trasciende lo físico",
-          "Conecta con lo divino",
-          "Asciende musicalmente"
-        ]
-      },
-      {
-        id: "11-4",
-        name: "Ingravidez Musical",
-        description: "Flotación en el espacio armónico",
-        duration: 75,
-        difficulty: "Legendario",
-        techniques: ["Musical Weightlessness", "Harmonic Floating", "Space Travel"],
-        sequenceIds: [26],
-        instructions: [
-          "Flota en el espacio armónico",
-          "Pierde la gravedad musical",
-          "Navega entre las estrellas",
-          "Experimenta la ingravidez total"
-        ]
-      }
-    ],
-    12: [
-      {
-        id: "12-1",
-        name: "Tormenta Armónica",
-        description: "Caos controlado con 8 escalas alteradas",
-        duration: 60,
-        difficulty: "Legendario",
-        techniques: ["Controlled Chaos", "Altered Storm", "Harmonic Hurricane"],
-        sequenceIds: [27],
-        instructions: [
-          "Navega en la tormenta armónica",
-          "Controla el caos musical",
-          "Cada acorde es un rayo diferente",
-          "Sobrevive al huracán armónico"
-        ]
-      },
-      {
-        id: "12-2",
-        name: "Drama Teatral Máximo",
-        description: "Cada acorde es un acto dramático",
-        duration: 90,
-        difficulty: "Legendario",
-        techniques: ["Maximum Drama", "Theatrical Expression", "Epic Storytelling"],
-        sequenceIds: [28],
-        instructions: [
-          "Cada acorde cuenta una historia",
-          "Maximiza el drama en cada cambio",
-          "Sé actor y músico a la vez",
-          "Crea teatro musical puro"
-        ]
-      },
-      {
-        id: "12-3",
-        name: "Universo Infinito",
-        description: "Expansión cósmica con silencios transcendentales",
-        duration: 120,
-        difficulty: "Legendario",
-        techniques: ["Cosmic Expansion", "Infinite Universe", "Transcendental Silence"],
-        sequenceIds: [29],
-        instructions: [
-          "Expande tu conciencia cósmica",
-          "Los silencios son tan importantes como las notas",
-          "Siente la infinitud del universo",
-          "Conecta con la creación misma"
-        ]
-      },
-      {
-        id: "12-4",
-        name: "ADN Musical Genético",
-        description: "16 acordes cromáticos - el código genético de la música",
-        duration: 150,
-        difficulty: "Legendario",
-        techniques: ["Musical DNA", "Genetic Code", "Chromatic Evolution"],
-        sequenceIds: [30],
-        instructions: [
-          "Cada acorde es un gen musical",
-          "Decodifica el ADN de la armonía",
-          "16 acordes = código genético completo",
-          "Evoluciona musicalmente"
-        ]
-      }
     ]
   };
 
@@ -817,11 +584,7 @@ const ChordExplorer: React.FC = () => {
     5: [8, 9],
     6: [10, 11],
     7: [12],
-    8: [13, 14, 15],
-    9: [16, 17, 18, 19],
-    10: [20, 21, 22],
-    11: [23, 24, 25, 26],
-    12: [27, 28, 29, 30]
+    8: [13, 14, 15]
   };
 
   // Timer para ejercicios
@@ -914,7 +677,7 @@ const ChordExplorer: React.FC = () => {
         {/* Navegación de Fases */}
         <div className="flex justify-center mb-8">
           <div className="flex flex-wrap bg-white rounded-xl shadow-lg p-2 gap-1">
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(phase => {
+            {[1, 2, 3, 4, 5, 6, 7, 8].map(phase => {
               const unlocked = isPhaseUnlocked(phase);
               const getPhaseColor = (phase: number) => {
                 if (phase <= 4) return currentPhase === phase ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100';
@@ -926,7 +689,7 @@ const ChordExplorer: React.FC = () => {
               };
               
               const getPhaseEmoji = (phase: number) => {
-                const emojis = { 1: '📗', 2: '📘', 3: '📕', 4: '📜', 5: '🔥', 6: '💀', 7: '🏆', 8: '🧠', 9: '🌍', 10: '⏳', 11: '💫', 12: '🌌' };
+                const emojis = { 1: '📗', 2: '📘', 3: '📕', 4: '📜', 5: '🔥', 6: '💀', 7: '🏆', 8: '🧠' };
                 return emojis[phase] || '';
               };
               
@@ -953,10 +716,6 @@ const ChordExplorer: React.FC = () => {
                       {phase === 6 && 'IMPOSIBLE'}
                       {phase === 7 && 'TRANSCENDENTAL'}
                       {phase === 8 && 'CEREBRAL'}
-                      {phase === 9 && 'MUNDIAL'}
-                      {phase === 10 && 'TEMPORAL'}
-                      {phase === 11 && 'EMOCIONAL'}
-                      {phase === 12 && 'EXTREMO'}
                     </div>
                   )}
                 </button>
@@ -976,20 +735,12 @@ const ChordExplorer: React.FC = () => {
                   {currentPhase === 6 && '💀 ZONA DE TÉCNICA IMPOSIBLE'}
                   {currentPhase === 7 && '🏆 ZONA DE TRANSCENDENCIA MUSICAL'}
                   {currentPhase === 8 && '🧠 ZONA DE RETOS CEREBRALES PUROS'}
-                  {currentPhase === 9 && '🌍 ZONA DE SOPA MUNDIAL'}
-                  {currentPhase === 10 && '⏳ ZONA DE SOPA TEMPORAL'}
-                  {currentPhase === 11 && '💫 ZONA DE SOPA EMOCIONAL'}
-                  {currentPhase === 12 && '🌌 ZONA DE SOPA EXTREMA'}
                 </h3>
                 <p className="text-sm opacity-90">
                   {currentPhase === 5 && 'Estos ejercicios desafían tu comprensión armónica y capacidad de procesamiento mental.'}
                   {currentPhase === 6 && 'Combinaciones de técnicas que parecen físicamente imposibles. Procede bajo tu propio riesgo.'}
                   {currentPhase === 7 && 'El nivel final. Maestría absoluta que trasciende la técnica pura.'}
                   {currentPhase === 8 && 'Retos puramente cerebrales que requieren capacidad mental sobrehumana.'}
-                  {currentPhase === 9 && 'Viaje musical por todas las culturas del mundo. Escalas exóticas y tradiciones ancestrales.'}
-                  {currentPhase === 10 && 'Navegación temporal por la historia de la música. Del gregoriano al futuro.'}
-                  {currentPhase === 11 && 'Exploración de las emociones más profundas a través de escalas especializadas.'}
-                  {currentPhase === 12 && 'El caos controlado. Combinaciones extremas que desafían toda lógica musical.'}
                 </p>
               </div>
             </div>
@@ -998,10 +749,6 @@ const ChordExplorer: React.FC = () => {
               {currentPhase === 6 && '🔥 Requiere: Coordinación sobrehumana, técnicas simultáneas, preparación física extrema'}
               {currentPhase === 7 && '✨ Requiere: Fusión total mente-cuerpo-música, creatividad transcendental, estado meditativo'}
               {currentPhase === 8 && '🧠 Requiere: Capacidad mental sobrehumana, procesamiento multi-tarea extremo, resistencia cognitiva'}
-              {currentPhase === 9 && '🌍 Requiere: Conocimiento cultural amplio, adaptabilidad extrema, sensibilidad intercultural'}
-              {currentPhase === 10 && '⏳ Requiere: Conocimiento histórico musical, adaptación estilística, visión temporal'}
-              {currentPhase === 11 && '💫 Requiere: Inteligencia emocional extrema, sensibilidad artística, conexión espiritual'}
-              {currentPhase === 12 && '🌌 Requiere: Maestría total, resistencia mental absoluta, capacidad de controlar el caos'}
             </div>
           </div>
         )}
@@ -1021,11 +768,7 @@ const ChordExplorer: React.FC = () => {
                     currentPhase === 5 ? 'Retos Mentales' :
                     currentPhase === 6 ? 'Técnica Extrema' :
                     currentPhase === 7 ? 'Maestría Total' :
-                    currentPhase === 8 ? 'Retos Cerebrales' :
-                    currentPhase === 9 ? 'Sopa Mundial' :
-                    currentPhase === 10 ? 'Sopa Temporal' :
-                    currentPhase === 11 ? 'Sopa Emocional' :
-                    'Sopa Extrema'
+                    'Retos Cerebrales'
                   }
                 </h2>
                 <div className={`px-3 py-1 rounded-full text-sm font-medium ${
@@ -1033,11 +776,7 @@ const ChordExplorer: React.FC = () => {
                   currentPhase === 5 ? 'text-red-600 bg-red-100' :
                   currentPhase === 6 ? 'text-purple-600 bg-purple-100' :
                   currentPhase === 7 ? 'text-yellow-700 bg-yellow-100' :
-                  currentPhase === 8 ? 'text-pink-600 bg-pink-100' :
-                  currentPhase === 9 ? 'text-green-600 bg-green-100' :
-                  currentPhase === 10 ? 'text-indigo-600 bg-indigo-100' :
-                  currentPhase === 11 ? 'text-rose-600 bg-rose-100' :
-                  'text-gray-600 bg-gray-100'
+                  'text-pink-600 bg-pink-100'
                 }`}>
                   {getPhaseProgress(currentPhase)}% Completado
                 </div>
@@ -1266,7 +1005,7 @@ const ChordExplorer: React.FC = () => {
               <h3 className="text-xl font-bold text-gray-800 mb-4">Progreso General</h3>
               
               <div className="space-y-3">
-                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(phase => {
+                {[1, 2, 3, 4, 5, 6, 7, 8].map(phase => {
                   const progress = getPhaseProgress(phase);
                   const unlocked = true; // Todas desbloqueadas
                   
@@ -1283,11 +1022,7 @@ const ChordExplorer: React.FC = () => {
                             phase === 5 ? 'Retos Mentales' :
                             phase === 6 ? 'Técnica Extrema' :
                             phase === 7 ? 'Transcendencia' :
-                            phase === 8 ? 'Retos Cerebrales' :
-                            phase === 9 ? 'Sopa Mundial' :
-                            phase === 10 ? 'Sopa Temporal' :
-                            phase === 11 ? 'Sopa Emocional' :
-                            'Sopa Extrema'
+                            'Retos Cerebrales'
                           }
                         </span>
                         <span className="text-sm font-bold">{progress}%</span>
@@ -1299,11 +1034,7 @@ const ChordExplorer: React.FC = () => {
                             phase === 5 ? 'bg-red-500' :
                             phase === 6 ? 'bg-purple-500' :
                             phase === 7 ? 'bg-gradient-to-r from-yellow-500 to-orange-500' :
-                            phase === 8 ? 'bg-gradient-to-r from-pink-500 to-red-500' :
-                            phase === 9 ? 'bg-gradient-to-r from-green-500 to-blue-500' :
-                            phase === 10 ? 'bg-gradient-to-r from-indigo-500 to-purple-500' :
-                            phase === 11 ? 'bg-gradient-to-r from-rose-500 to-pink-500' :
-                            'bg-gradient-to-r from-black to-gray-800'
+                            'bg-gradient-to-r from-pink-500 to-red-500'
                           }`}
                           style={{ width: `${progress}%` }}
                         />
@@ -1320,7 +1051,6 @@ const ChordExplorer: React.FC = () => {
             {/* Panel de Anatomía de Acordes */}
             <ChordAnatomyPanel selectedChord={selectedChord} />
             
-            {/* Panel de Metodología */}
             {/* Panel de Metodología */}
             <MethodologyPanel currentPhase={currentPhase} />
             
