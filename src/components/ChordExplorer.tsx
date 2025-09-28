@@ -619,9 +619,7 @@ const ChordExplorer: React.FC = () => {
   };
 
   const isPhaseUnlocked = (phase: number): boolean => {
-    if (phase === 1) return true;
-    const prevPhaseProgress = getPhaseProgress(phase - 1);
-    return prevPhaseProgress >= 75;
+    return true; // Todas las fases desbloqueadas
   };
 
   const startExercise = (exercise: Exercise) => {
@@ -698,17 +696,14 @@ const ChordExplorer: React.FC = () => {
               return (
                 <button
                   key={phase}
-                  onClick={() => unlocked && setCurrentPhase(phase)}
-                  disabled={!unlocked}
+                  onClick={() => setCurrentPhase(phase)}
                   className={`px-4 py-3 rounded-lg font-semibold transition-all flex flex-col items-center gap-1 min-w-[80px] ${
-                    unlocked
-                      ? getPhaseColor(phase) + (currentPhase === phase ? ' shadow-md' : '')
-                      : 'text-gray-400 bg-gray-50 cursor-not-allowed'
+                    getPhaseColor(phase) + (currentPhase === phase ? ' shadow-md' : '')
                   } ${phase > 4 && unlocked ? 'animate-pulse' : ''}`}
                   title={phase > 4 ? 'Fase Extrema - Solo para valientes' : ''}
                 >
                   <div className="flex items-center gap-1">
-                    {unlocked ? <Unlock size={14} /> : <Lock size={14} />}
+                    <Unlock size={14} />
                     <span className="text-lg">{getPhaseEmoji(phase)}</span>
                   </div>
                   <div className="text-sm">Fase {phase}</div>
@@ -1012,13 +1007,13 @@ const ChordExplorer: React.FC = () => {
               <div className="space-y-3">
                 {[1, 2, 3, 4, 5, 6, 7, 8].map(phase => {
                   const progress = getPhaseProgress(phase);
-                  const unlocked = isPhaseUnlocked(phase);
+                  const unlocked = true; // Todas desbloqueadas
                   
                   return (
-                    <div key={phase} className={`p-3 rounded-lg ${unlocked ? 'bg-gray-50' : 'bg-gray-100 opacity-50'}`}>
+                    <div key={phase} className="p-3 rounded-lg bg-gray-50">
                       <div className="flex justify-between items-center mb-2">
                         <span className="font-medium">
-                          {unlocked ? <Unlock size={16} className="inline mr-2" /> : <Lock size={16} className="inline mr-2" />}
+                          <Unlock size={16} className="inline mr-2" />
                           Fase {phase}: {
                             phase === 1 ? 'Fundamentos' :
                             phase === 2 ? 'Exploración' :
