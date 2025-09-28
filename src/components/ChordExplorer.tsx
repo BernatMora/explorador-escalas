@@ -681,7 +681,7 @@ const ChordExplorer: React.FC = () => {
         {/* Navegación de Fases */}
         <div className="flex justify-center mb-8">
           <div className="flex flex-wrap bg-white rounded-xl shadow-lg p-2 gap-1">
-            {[1, 2, 3, 4, 5, 6, 7, 8].map(phase => {
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(phase => {
               const unlocked = isPhaseUnlocked(phase);
               const getPhaseColor = (phase: number) => {
                 if (phase <= 4) return currentPhase === phase ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100';
@@ -689,11 +689,18 @@ const ChordExplorer: React.FC = () => {
                 if (phase === 6) return currentPhase === phase ? 'bg-purple-600 text-white' : 'text-purple-600 hover:bg-purple-50';
                 if (phase === 7) return currentPhase === phase ? 'bg-gradient-to-r from-yellow-500 to-orange-500 text-white' : 'text-orange-600 hover:bg-orange-50';
                 if (phase === 8) return currentPhase === phase ? 'bg-gradient-to-r from-pink-500 to-red-500 text-white' : 'text-pink-600 hover:bg-pink-50';
+                if (phase === 9) return currentPhase === phase ? 'bg-gradient-to-r from-green-500 to-teal-500 text-white' : 'text-green-600 hover:bg-green-50';
+                if (phase === 10) return currentPhase === phase ? 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white' : 'text-indigo-600 hover:bg-indigo-50';
+                if (phase === 11) return currentPhase === phase ? 'bg-gradient-to-r from-rose-500 to-pink-500 text-white' : 'text-rose-600 hover:bg-rose-50';
+                if (phase === 12) return currentPhase === phase ? 'bg-gradient-to-r from-gray-800 to-black text-white' : 'text-gray-800 hover:bg-gray-100';
                 return 'text-gray-600';
               };
               
               const getPhaseEmoji = (phase: number) => {
-                const emojis = { 1: '📗', 2: '📘', 3: '📕', 4: '📜', 5: '🔥', 6: '💀', 7: '🏆', 8: '🧠' };
+                const emojis = { 
+                  1: '📗', 2: '📘', 3: '📕', 4: '📜', 5: '🔥', 6: '💀', 7: '🏆', 8: '🧠',
+                  9: '🌍', 10: '⏳', 11: '💫', 12: '🌌'
+                };
                 return emojis[phase] || '';
               };
               
@@ -720,6 +727,10 @@ const ChordExplorer: React.FC = () => {
                       {phase === 6 && 'IMPOSIBLE'}
                       {phase === 7 && 'TRANSCENDENTAL'}
                       {phase === 8 && 'CEREBRAL'}
+                      {phase === 9 && 'MUNDIAL'}
+                      {phase === 10 && 'TEMPORAL'}
+                      {phase === 11 && 'EMOCIONAL'}
+                      {phase === 12 && 'EXTREMA'}
                     </div>
                   )}
                 </button>
@@ -729,7 +740,7 @@ const ChordExplorer: React.FC = () => {
         </div>
 
         {/* Advertencia para Fases Extremas */}
-        {currentPhase > 4 && (
+        {currentPhase > 4 && currentPhase <= 8 && (
           <div className="mb-8 bg-gradient-to-r from-red-500 to-purple-600 text-white p-6 rounded-xl shadow-lg border-2 border-red-300">
             <div className="flex items-center gap-3 mb-3">
               <div className="text-3xl">⚠️</div>
@@ -757,6 +768,39 @@ const ChordExplorer: React.FC = () => {
           </div>
         )}
 
+        {/* Advertencia para Fases Épicas Nuevas */}
+        {currentPhase > 8 && (
+          <div className="mb-8 bg-gradient-to-r from-green-500 via-blue-500 to-purple-600 text-white p-6 rounded-xl shadow-lg border-2 border-blue-300">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="text-3xl">
+                {currentPhase === 9 && '🌍'}
+                {currentPhase === 10 && '⏳'}
+                {currentPhase === 11 && '💫'}
+                {currentPhase === 12 && '🌌'}
+              </div>
+              <div>
+                <h3 className="text-xl font-bold">
+                  {currentPhase === 9 && '🌍 SOPA MUNDIAL - VIAJE PLANETARIO'}
+                  {currentPhase === 10 && '⏳ SOPA TEMPORAL - VIAJE EN EL TIEMPO'}
+                  {currentPhase === 11 && '💫 SOPA EMOCIONAL - PAISAJES DEL ALMA'}
+                  {currentPhase === 12 && '🌌 SOPA EXTREMA - EL LÍMITE FINAL'}
+                </h3>
+                <p className="text-sm opacity-90">
+                  {currentPhase === 9 && 'Mezclas épicas de escalas de todo el mundo. Cada acorde de una cultura diferente.'}
+                  {currentPhase === 10 && 'Viaja por la historia musical. Mezcla épocas desde el medieval hasta el futuro.'}
+                  {currentPhase === 11 && 'Paisajes emocionales puros. Cada secuencia cuenta una historia del alma.'}
+                  {currentPhase === 12 && 'El caos armónico total. Secuencias que desafían la realidad musical.'}
+                </p>
+              </div>
+            </div>
+            <div className="text-xs opacity-75">
+              {currentPhase === 9 && '🌏 Requiere: Conocimiento de culturas musicales, adaptabilidad extrema, oído mundial'}
+              {currentPhase === 10 && '⌛ Requiere: Conocimiento histórico, versatilidad estilística, viaje temporal mental'}
+              {currentPhase === 11 && '💖 Requiere: Inteligencia emocional, expresividad máxima, conexión con el alma'}
+              {currentPhase === 12 && '🚀 Requiere: Resistencia al caos, creatividad infinita, trascendencia de la lógica'}
+            </div>
+          </div>
+        )}
         {/* Contenido Principal */}
         <div className="grid lg:grid-cols-4 gap-6">
           {/* Panel Principal de Ejercicios */}
@@ -772,7 +816,11 @@ const ChordExplorer: React.FC = () => {
                     currentPhase === 5 ? 'Retos Mentales' :
                     currentPhase === 6 ? 'Técnica Extrema' :
                     currentPhase === 7 ? 'Maestría Total' :
-                    'Retos Cerebrales'
+                    currentPhase === 8 ? 'Retos Cerebrales' :
+                    currentPhase === 9 ? 'Sopa Mundial' :
+                    currentPhase === 10 ? 'Sopa Temporal' :
+                    currentPhase === 11 ? 'Sopa Emocional' :
+                    'Sopa Extrema'
                   }
                 </h2>
                 <div className={`px-3 py-1 rounded-full text-sm font-medium ${
@@ -1009,7 +1057,7 @@ const ChordExplorer: React.FC = () => {
               <h3 className="text-xl font-bold text-gray-800 mb-4">Progreso General</h3>
               
               <div className="space-y-3">
-                {[1, 2, 3, 4, 5, 6, 7, 8].map(phase => {
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(phase => {
                   const progress = getPhaseProgress(phase);
                   const unlocked = true; // Todas desbloqueadas
                   
@@ -1026,7 +1074,11 @@ const ChordExplorer: React.FC = () => {
                             phase === 5 ? 'Retos Mentales' :
                             phase === 6 ? 'Técnica Extrema' :
                             phase === 7 ? 'Transcendencia' :
-                            'Retos Cerebrales'
+                            phase === 8 ? 'Retos Cerebrales' :
+                            phase === 9 ? 'Sopa Mundial' :
+                            phase === 10 ? 'Sopa Temporal' :
+                            phase === 11 ? 'Sopa Emocional' :
+                            'Sopa Extrema'
                           }
                         </span>
                         <span className="text-sm font-bold">{progress}%</span>
@@ -1038,7 +1090,11 @@ const ChordExplorer: React.FC = () => {
                             phase === 5 ? 'bg-red-500' :
                             phase === 6 ? 'bg-purple-500' :
                             phase === 7 ? 'bg-gradient-to-r from-yellow-500 to-orange-500' :
-                            'bg-gradient-to-r from-pink-500 to-red-500'
+                            phase === 8 ? 'bg-gradient-to-r from-pink-500 to-red-500' :
+                            phase === 9 ? 'bg-gradient-to-r from-green-500 to-teal-500' :
+                            phase === 10 ? 'bg-gradient-to-r from-indigo-500 to-purple-500' :
+                            phase === 11 ? 'bg-gradient-to-r from-rose-500 to-pink-500' :
+                            'bg-gradient-to-r from-gray-800 to-black'
                           }`}
                           style={{ width: `${progress}%` }}
                         />
