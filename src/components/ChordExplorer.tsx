@@ -262,7 +262,11 @@ const ChordExplorer: React.FC = () => {
       difficulty: "Demencial",
       tempoRange: [80, 140],
       phase: 8
-    }
+    { id: 8, name: "Retos Cerebrales", emoji: "🧠", color: "from-purple-500 to-indigo-600" },
+    { id: 9, name: "Sopa Mundial", emoji: "🌍", color: "from-green-500 to-teal-600" },
+    { id: 10, name: "Sopa Temporal", emoji: "⏳", color: "from-indigo-500 to-purple-600" },
+    { id: 11, name: "Sopa Emocional", emoji: "💫", color: "from-pink-400 to-rose-600" },
+    { id: 12, name: "Sopa Extrema", emoji: "🌌", color: "from-gray-800 to-black" }
   ];
 
   // Ejercicios por fase
