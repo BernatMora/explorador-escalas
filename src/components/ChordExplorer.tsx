@@ -922,10 +922,6 @@ const ChordExplorer: React.FC = () => {
                 if (phase === 6) return currentPhase === phase ? 'bg-purple-600 text-white' : 'text-purple-600 hover:bg-purple-50';
                 if (phase === 7) return currentPhase === phase ? 'bg-gradient-to-r from-yellow-500 to-orange-500 text-white' : 'text-orange-600 hover:bg-orange-50';
                 if (phase === 8) return currentPhase === phase ? 'bg-gradient-to-r from-pink-500 to-red-500 text-white' : 'text-pink-600 hover:bg-pink-50';
-                if (phase === 9) return currentPhase === phase ? 'bg-gradient-to-r from-green-500 to-teal-500 text-white' : 'text-green-600 hover:bg-green-50';
-                if (phase === 10) return currentPhase === phase ? 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white' : 'text-indigo-600 hover:bg-indigo-50';
-                if (phase === 11) return currentPhase === phase ? 'bg-gradient-to-r from-rose-500 to-pink-500 text-white' : 'text-rose-600 hover:bg-rose-50';
-                if (phase === 12) return currentPhase === phase ? 'bg-gradient-to-r from-gray-800 to-black text-white' : 'text-gray-800 hover:bg-gray-100';
                 return 'text-gray-600';
               };
               
@@ -960,7 +956,7 @@ const ChordExplorer: React.FC = () => {
                       {phase === 9 && 'MUNDIAL'}
                       {phase === 10 && 'TEMPORAL'}
                       {phase === 11 && 'EMOCIONAL'}
-                      {phase === 12 && 'EXTREMA'}
+                      {phase === 12 && 'EXTREMO'}
                     </div>
                   )}
                 </button>
@@ -980,20 +976,20 @@ const ChordExplorer: React.FC = () => {
                   {currentPhase === 6 && '💀 ZONA DE TÉCNICA IMPOSIBLE'}
                   {currentPhase === 7 && '🏆 ZONA DE TRANSCENDENCIA MUSICAL'}
                   {currentPhase === 8 && '🧠 ZONA DE RETOS CEREBRALES PUROS'}
-                  {currentPhase === 9 && '🌍 DIVERSIDAD CULTURAL EXTREMA - Requiere apertura mental total - Mezcla tradiciones milenarias'}
-                  {currentPhase === 10 && '⏳ VIAJE TEMPORAL MUSICAL - Puede causar desorientación histórica - Saltos entre épocas extremos'}
-                  {currentPhase === 11 && '💫 INTENSIDAD EMOCIONAL MÁXIMA - Puede provocar catarsis musical - Preparación psicológica necesaria'}
-                  {currentPhase === 12 && '🌌 CAOS ARMÓNICO TOTAL - Puede fracturar la realidad musical - Solo para exploradores del infinito'}
+                  {currentPhase === 9 && '🌍 ZONA DE SOPA MUNDIAL'}
+                  {currentPhase === 10 && '⏳ ZONA DE SOPA TEMPORAL'}
+                  {currentPhase === 11 && '💫 ZONA DE SOPA EMOCIONAL'}
+                  {currentPhase === 12 && '🌌 ZONA DE SOPA EXTREMA'}
                 </h3>
                 <p className="text-sm opacity-90">
                   {currentPhase === 5 && 'Estos ejercicios desafían tu comprensión armónica y capacidad de procesamiento mental.'}
                   {currentPhase === 6 && 'Combinaciones de técnicas que parecen físicamente imposibles. Procede bajo tu propio riesgo.'}
                   {currentPhase === 7 && 'El nivel final. Maestría absoluta que trasciende la técnica pura.'}
                   {currentPhase === 8 && 'Retos puramente cerebrales que requieren capacidad mental sobrehumana.'}
-                  {currentPhase === 9 && 'Exploración de tradiciones musicales de todo el mundo con escalas exóticas y técnicas ancestrales.'}
-                  {currentPhase === 10 && 'Viaje a través de la historia musical desde el canto gregoriano hasta sonidos futuristas.'}
-                  {currentPhase === 11 && 'Expresión emocional extrema que puede provocar catarsis y transformación personal profunda.'}
-                  {currentPhase === 12 && 'Caos controlado que desafía las leyes de la armonía tradicional y la percepción musical.'}
+                  {currentPhase === 9 && 'Viaje musical por todas las culturas del mundo. Escalas exóticas y tradiciones ancestrales.'}
+                  {currentPhase === 10 && 'Navegación temporal por la historia de la música. Del gregoriano al futuro.'}
+                  {currentPhase === 11 && 'Exploración de las emociones más profundas a través de escalas especializadas.'}
+                  {currentPhase === 12 && 'El caos controlado. Combinaciones extremas que desafían toda lógica musical.'}
                 </p>
               </div>
             </div>
@@ -1002,10 +998,10 @@ const ChordExplorer: React.FC = () => {
               {currentPhase === 6 && '🔥 Requiere: Coordinación sobrehumana, técnicas simultáneas, preparación física extrema'}
               {currentPhase === 7 && '✨ Requiere: Fusión total mente-cuerpo-música, creatividad transcendental, estado meditativo'}
               {currentPhase === 8 && '🧠 Requiere: Capacidad mental sobrehumana, procesamiento multi-tarea extremo, resistencia cognitiva'}
-              {currentPhase === 9 && '🌍 Requiere: Apertura cultural total, conocimiento de tradiciones mundiales, adaptabilidad extrema'}
-              {currentPhase === 10 && '⏳ Requiere: Conocimiento histórico musical, adaptación temporal, flexibilidad estilística'}
-              {currentPhase === 11 && '💫 Requiere: Inteligencia emocional extrema, vulnerabilidad controlada, expresión auténtica'}
-              {currentPhase === 12 && '🌌 Requiere: Mente abierta al caos, resistencia al vértigo armónico, valor para lo desconocido'}
+              {currentPhase === 9 && '🌍 Requiere: Conocimiento cultural amplio, adaptabilidad extrema, sensibilidad intercultural'}
+              {currentPhase === 10 && '⏳ Requiere: Conocimiento histórico musical, adaptación estilística, visión temporal'}
+              {currentPhase === 11 && '💫 Requiere: Inteligencia emocional extrema, sensibilidad artística, conexión espiritual'}
+              {currentPhase === 12 && '🌌 Requiere: Maestría total, resistencia mental absoluta, capacidad de controlar el caos'}
             </div>
           </div>
         )}
@@ -1041,7 +1037,7 @@ const ChordExplorer: React.FC = () => {
                   currentPhase === 9 ? 'text-green-600 bg-green-100' :
                   currentPhase === 10 ? 'text-indigo-600 bg-indigo-100' :
                   currentPhase === 11 ? 'text-rose-600 bg-rose-100' :
-                  'text-gray-800 bg-gray-200'
+                  'text-gray-600 bg-gray-100'
                 }`}>
                   {getPhaseProgress(currentPhase)}% Completado
                 </div>
@@ -1304,10 +1300,10 @@ const ChordExplorer: React.FC = () => {
                             phase === 6 ? 'bg-purple-500' :
                             phase === 7 ? 'bg-gradient-to-r from-yellow-500 to-orange-500' :
                             phase === 8 ? 'bg-gradient-to-r from-pink-500 to-red-500' :
-                            phase === 9 ? 'bg-gradient-to-r from-green-500 to-teal-600' :
-                            phase === 10 ? 'bg-gradient-to-r from-indigo-500 to-purple-600' :
-                            phase === 11 ? 'bg-gradient-to-r from-pink-400 to-rose-600' :
-                            'bg-gradient-to-r from-gray-800 to-black'
+                            phase === 9 ? 'bg-gradient-to-r from-green-500 to-blue-500' :
+                            phase === 10 ? 'bg-gradient-to-r from-indigo-500 to-purple-500' :
+                            phase === 11 ? 'bg-gradient-to-r from-rose-500 to-pink-500' :
+                            'bg-gradient-to-r from-black to-gray-800'
                           }`}
                           style={{ width: `${progress}%` }}
                         />
