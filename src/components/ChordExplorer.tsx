@@ -266,7 +266,31 @@ const ChordExplorer: React.FC = () => {
     { id: 9, name: "Sopa Mundial", emoji: "🌍", color: "from-green-500 to-teal-600" },
     { id: 10, name: "Sopa Temporal", emoji: "⏳", color: "from-indigo-500 to-purple-600" },
     { id: 11, name: "Sopa Emocional", emoji: "💫", color: "from-pink-400 to-rose-600" },
-    { id: 12, name: "Sopa Extrema", emoji: "🌌", color: "from-gray-800 to-black" }
+    },
+    {
+      name: "Sopa Mundial",
+      description: "Escalas de todo el planeta mezcladas en secuencias épicas",
+      tempoRange: [60, 120],
+      phase: 9
+    },
+    {
+      name: "Sopa Temporal", 
+      description: "Viaje en el tiempo musical a través de épocas",
+      tempoRange: [70, 130],
+      phase: 10
+    },
+    {
+      name: "Sopa Emocional",
+      description: "Paisajes del alma con escalas que transmiten emociones puras",
+      tempoRange: [50, 110],
+      phase: 11
+    },
+    {
+      name: "Sopa Extrema",
+      description: "Caos armónico total - el límite final de la experimentación",
+      tempoRange: [40, 160],
+      phase: 12
+    }
   ];
 
   // Ejercicios por fase
