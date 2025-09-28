@@ -824,23 +824,6 @@ const ChordExplorer: React.FC = () => {
     12: [27, 28, 29, 30]
   };
 
-  const phaseInfo = {
-    1: { emoji: '📗', title: 'Fundamentos', color: 'from-green-400 to-blue-500', description: 'Construcción gradual de acordes básicos' },
-    2: { emoji: '📘', title: 'Exploración', color: 'from-blue-400 to-purple-500', description: 'Descubrimiento de colores modales' },
-    3: { emoji: '📕', title: 'Desarrollo', color: 'from-purple-400 to-pink-500', description: 'Rearmónización y sustituciones' },
-    4: { emoji: '📜', title: 'Maestría', color: 'from-pink-400 to-red-500', description: 'Técnicas virtuosas y expresión' },
-    5: { emoji: '🔥', title: 'Retos Mentales', color: 'from-red-400 to-orange-500', description: 'Desafíos cognitivos extremos' },
-    6: { emoji: '💀', title: 'Técnica Extrema', color: 'from-orange-400 to-yellow-500', description: 'Combinaciones técnicas imposibles' },
-    7: { emoji: '🏆', title: 'Transcendencia', color: 'from-yellow-400 to-green-500', description: 'Fusión total músico-música' },
-    8: { emoji: '🧠', title: 'Retos Cerebrales', color: 'from-indigo-400 to-purple-500', description: 'Capacidad mental sobrehumana' },
-    9: { emoji: '🌍', title: 'Sopa Mundial', color: 'from-green-500 to-teal-500', description: 'Escalas de todo el planeta mezcladas' },
-    10: { emoji: '⏳', title: 'Sopa Temporal', color: 'from-indigo-500 to-purple-600', description: 'Viaje en el tiempo musical' },
-    11: { emoji: '💫', title: 'Sopa Emocional', color: 'from-pink-500 to-rose-500', description: 'Paisajes del alma musical' },
-    12: { emoji: '🌌', title: 'Sopa Extrema', color: 'from-gray-800 to-black', description: 'Caos armónico total' }
-  };
-
-  const totalPhases = 12;
-
   // Timer para ejercicios
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -931,7 +914,7 @@ const ChordExplorer: React.FC = () => {
         {/* Navegación de Fases */}
         <div className="flex justify-center mb-8">
           <div className="flex flex-wrap bg-white rounded-xl shadow-lg p-2 gap-1">
-            {[1, 2, 3, 4, 5, 6, 7, 8].map(phase => {
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(phase => {
               const unlocked = isPhaseUnlocked(phase);
               const getPhaseColor = (phase: number) => {
                 if (phase <= 4) return currentPhase === phase ? 'bg-blue-600 text-white' : 'text-gray-600 hover:bg-gray-100';
@@ -939,11 +922,15 @@ const ChordExplorer: React.FC = () => {
                 if (phase === 6) return currentPhase === phase ? 'bg-purple-600 text-white' : 'text-purple-600 hover:bg-purple-50';
                 if (phase === 7) return currentPhase === phase ? 'bg-gradient-to-r from-yellow-500 to-orange-500 text-white' : 'text-orange-600 hover:bg-orange-50';
                 if (phase === 8) return currentPhase === phase ? 'bg-gradient-to-r from-pink-500 to-red-500 text-white' : 'text-pink-600 hover:bg-pink-50';
+                if (phase === 9) return currentPhase === phase ? 'bg-gradient-to-r from-green-500 to-teal-500 text-white' : 'text-green-600 hover:bg-green-50';
+                if (phase === 10) return currentPhase === phase ? 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white' : 'text-indigo-600 hover:bg-indigo-50';
+                if (phase === 11) return currentPhase === phase ? 'bg-gradient-to-r from-rose-500 to-pink-500 text-white' : 'text-rose-600 hover:bg-rose-50';
+                if (phase === 12) return currentPhase === phase ? 'bg-gradient-to-r from-gray-800 to-black text-white' : 'text-gray-800 hover:bg-gray-100';
                 return 'text-gray-600';
               };
               
               const getPhaseEmoji = (phase: number) => {
-                const emojis = { 1: '📗', 2: '📘', 3: '📕', 4: '📜', 5: '🔥', 6: '💀', 7: '🏆', 8: '🧠' };
+                const emojis = { 1: '📗', 2: '📘', 3: '📕', 4: '📜', 5: '🔥', 6: '💀', 7: '🏆', 8: '🧠', 9: '🌍', 10: '⏳', 11: '💫', 12: '🌌' };
                 return emojis[phase] || '';
               };
               
@@ -970,6 +957,10 @@ const ChordExplorer: React.FC = () => {
                       {phase === 6 && 'IMPOSIBLE'}
                       {phase === 7 && 'TRANSCENDENTAL'}
                       {phase === 8 && 'CEREBRAL'}
+                      {phase === 9 && 'MUNDIAL'}
+                      {phase === 10 && 'TEMPORAL'}
+                      {phase === 11 && 'EMOCIONAL'}
+                      {phase === 12 && 'EXTREMA'}
                     </div>
                   )}
                 </button>
@@ -989,12 +980,20 @@ const ChordExplorer: React.FC = () => {
                   {currentPhase === 6 && '💀 ZONA DE TÉCNICA IMPOSIBLE'}
                   {currentPhase === 7 && '🏆 ZONA DE TRANSCENDENCIA MUSICAL'}
                   {currentPhase === 8 && '🧠 ZONA DE RETOS CEREBRALES PUROS'}
+                  {currentPhase === 9 && '🌍 DIVERSIDAD CULTURAL EXTREMA - Requiere apertura mental total - Mezcla tradiciones milenarias'}
+                  {currentPhase === 10 && '⏳ VIAJE TEMPORAL MUSICAL - Puede causar desorientación histórica - Saltos entre épocas extremos'}
+                  {currentPhase === 11 && '💫 INTENSIDAD EMOCIONAL MÁXIMA - Puede provocar catarsis musical - Preparación psicológica necesaria'}
+                  {currentPhase === 12 && '🌌 CAOS ARMÓNICO TOTAL - Puede fracturar la realidad musical - Solo para exploradores del infinito'}
                 </h3>
                 <p className="text-sm opacity-90">
                   {currentPhase === 5 && 'Estos ejercicios desafían tu comprensión armónica y capacidad de procesamiento mental.'}
                   {currentPhase === 6 && 'Combinaciones de técnicas que parecen físicamente imposibles. Procede bajo tu propio riesgo.'}
                   {currentPhase === 7 && 'El nivel final. Maestría absoluta que trasciende la técnica pura.'}
                   {currentPhase === 8 && 'Retos puramente cerebrales que requieren capacidad mental sobrehumana.'}
+                  {currentPhase === 9 && 'Exploración de tradiciones musicales de todo el mundo con escalas exóticas y técnicas ancestrales.'}
+                  {currentPhase === 10 && 'Viaje a través de la historia musical desde el canto gregoriano hasta sonidos futuristas.'}
+                  {currentPhase === 11 && 'Expresión emocional extrema que puede provocar catarsis y transformación personal profunda.'}
+                  {currentPhase === 12 && 'Caos controlado que desafía las leyes de la armonía tradicional y la percepción musical.'}
                 </p>
               </div>
             </div>
@@ -1003,6 +1002,10 @@ const ChordExplorer: React.FC = () => {
               {currentPhase === 6 && '🔥 Requiere: Coordinación sobrehumana, técnicas simultáneas, preparación física extrema'}
               {currentPhase === 7 && '✨ Requiere: Fusión total mente-cuerpo-música, creatividad transcendental, estado meditativo'}
               {currentPhase === 8 && '🧠 Requiere: Capacidad mental sobrehumana, procesamiento multi-tarea extremo, resistencia cognitiva'}
+              {currentPhase === 9 && '🌍 Requiere: Apertura cultural total, conocimiento de tradiciones mundiales, adaptabilidad extrema'}
+              {currentPhase === 10 && '⏳ Requiere: Conocimiento histórico musical, adaptación temporal, flexibilidad estilística'}
+              {currentPhase === 11 && '💫 Requiere: Inteligencia emocional extrema, vulnerabilidad controlada, expresión auténtica'}
+              {currentPhase === 12 && '🌌 Requiere: Mente abierta al caos, resistencia al vértigo armónico, valor para lo desconocido'}
             </div>
           </div>
         )}
@@ -1022,7 +1025,11 @@ const ChordExplorer: React.FC = () => {
                     currentPhase === 5 ? 'Retos Mentales' :
                     currentPhase === 6 ? 'Técnica Extrema' :
                     currentPhase === 7 ? 'Maestría Total' :
-                    'Retos Cerebrales'
+                    currentPhase === 8 ? 'Retos Cerebrales' :
+                    currentPhase === 9 ? 'Sopa Mundial' :
+                    currentPhase === 10 ? 'Sopa Temporal' :
+                    currentPhase === 11 ? 'Sopa Emocional' :
+                    'Sopa Extrema'
                   }
                 </h2>
                 <div className={`px-3 py-1 rounded-full text-sm font-medium ${
@@ -1030,7 +1037,11 @@ const ChordExplorer: React.FC = () => {
                   currentPhase === 5 ? 'text-red-600 bg-red-100' :
                   currentPhase === 6 ? 'text-purple-600 bg-purple-100' :
                   currentPhase === 7 ? 'text-yellow-700 bg-yellow-100' :
-                  'text-pink-600 bg-pink-100'
+                  currentPhase === 8 ? 'text-pink-600 bg-pink-100' :
+                  currentPhase === 9 ? 'text-green-600 bg-green-100' :
+                  currentPhase === 10 ? 'text-indigo-600 bg-indigo-100' :
+                  currentPhase === 11 ? 'text-rose-600 bg-rose-100' :
+                  'text-gray-800 bg-gray-200'
                 }`}>
                   {getPhaseProgress(currentPhase)}% Completado
                 </div>
@@ -1293,10 +1304,10 @@ const ChordExplorer: React.FC = () => {
                             phase === 6 ? 'bg-purple-500' :
                             phase === 7 ? 'bg-gradient-to-r from-yellow-500 to-orange-500' :
                             phase === 8 ? 'bg-gradient-to-r from-pink-500 to-red-500' :
-                            phase === 9 ? 'bg-gradient-to-r from-green-500 to-blue-500' :
-                            phase === 10 ? 'bg-gradient-to-r from-indigo-500 to-purple-500' :
-                            phase === 11 ? 'bg-gradient-to-r from-rose-500 to-pink-500' :
-                            'bg-gradient-to-r from-black to-gray-800'
+                            phase === 9 ? 'bg-gradient-to-r from-green-500 to-teal-600' :
+                            phase === 10 ? 'bg-gradient-to-r from-indigo-500 to-purple-600' :
+                            phase === 11 ? 'bg-gradient-to-r from-pink-400 to-rose-600' :
+                            'bg-gradient-to-r from-gray-800 to-black'
                           }`}
                           style={{ width: `${progress}%` }}
                         />
